@@ -1299,7 +1299,7 @@
 											"top": 350,
 											"width": 145.4853515625,
 											"height": 13,
-											"text": "+title",
+											"text": "+title: String",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1317,7 +1317,7 @@
 											"top": 365,
 											"width": 145.4853515625,
 											"height": 13,
-											"text": "+introduction",
+											"text": "+introduction: String",
 											"horizontalAlignment": 0
 										},
 										{
@@ -1335,7 +1335,7 @@
 											"top": 380,
 											"width": 145.4853515625,
 											"height": 13,
-											"text": "+coverImageId",
+											"text": "+coverImageId: String",
 											"horizontalAlignment": 0
 										}
 									],
@@ -2340,7 +2340,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGcDisqZJ9kjLQ="
 							},
-							"name": "title"
+							"name": "title",
+							"type": "String"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -2348,7 +2349,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGcDisqZJ9kjLQ="
 							},
-							"name": "introduction"
+							"name": "introduction",
+							"type": "String"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -2356,7 +2358,8 @@
 							"_parent": {
 								"$ref": "AAAAAAGcDisqZJ9kjLQ="
 							},
-							"name": "coverImageId"
+							"name": "coverImageId",
+							"type": "String"
 						}
 					]
 				},

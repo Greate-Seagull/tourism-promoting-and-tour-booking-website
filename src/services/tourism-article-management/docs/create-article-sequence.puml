@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant ":CreateArticleUsecase" as U
+participant ":Article" as A
+participant ":ArticleRepository" as R
+
+[o-> U: execute
+activate U
+
+create A
+U -> A: create
+
+U -> R: save
+activate R
+
+@enduml
