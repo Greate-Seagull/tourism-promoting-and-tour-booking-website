@@ -22,6 +22,14 @@ public class Article {
         return article;
     }
 
+    public static Article rehydrate(String articleId, String title, String introduction, String coverImageId) {
+        Article article = new Article(new ArticleId(articleId));
+        article.title = title;
+        article.introduction = introduction;
+        article.coverImageId = coverImageId;
+        return article;
+    }
+
     private void changeCoverImage(String coverImageId) {
         if (coverImageId == null)
             throw new MissingFieldException("coverImageId");
@@ -40,7 +48,7 @@ public class Article {
         this.introduction = introduction;
     }
 
-    private void changeTitle(String title) {
+    public void changeTitle(String title) {
         if (title == null)
             throw new MissingFieldException("title");
         if (title.isBlank())

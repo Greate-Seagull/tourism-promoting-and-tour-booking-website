@@ -1,26 +1,35 @@
 package com.uit.tourism_article_management.presentation.controller;
 
+import com.uit.tourism_article_management.application.command.change_title.ChangeTitleCommand;
+import com.uit.tourism_article_management.application.command.change_title.ChangeTitleUsecase;
 import com.uit.tourism_article_management.application.command.create_article.CreateArticleCommand;
 import com.uit.tourism_article_management.application.command.create_article.CreateArticleUsecase;
 import com.uit.tourism_article_management.presentation.dto.ApiResponse;
+import com.uit.tourism_article_management.presentation.dto.ChangeTitleRequestBody;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/articles")
 public class ArticleController {
     private final CreateArticleUsecase createArticleUsecase;
+    private final ChangeTitleUsecase changeTitleUsecase;
 
-    public ArticleController(CreateArticleUsecase createArticleUsecase) {
+    public ArticleController(CreateArticleUsecase createArticleUsecase, ChangeTitleUsecase changeTitleUsecase) {
         this.createArticleUsecase = createArticleUsecase;
+        this.changeTitleUsecase = changeTitleUsecase;
     }
 
     @PostMapping()
     public ResponseEntity<ApiResponse> createArticle(@RequestBody CreateArticleCommand request){
         this.createArticleUsecase.execute(request);
+        return ResponseEntity.ok(ApiResponse.builder().build());
+    }
+
+    @PatchMapping("/{id}/title")
+    public ResponseEntity<ApiResponse> changeTitle(@PathVariable String id, @RequestBody ChangeTitleRequestBody body) {
+        ChangeTitleCommand request = new ChangeTitleCommand(id, body.title());
+        this.changeTitleUsecase.execute(request);
         return ResponseEntity.ok(ApiResponse.builder().build());
     }
 }

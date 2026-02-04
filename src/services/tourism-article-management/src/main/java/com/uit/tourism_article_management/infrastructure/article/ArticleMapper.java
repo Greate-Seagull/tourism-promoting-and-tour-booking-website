@@ -9,10 +9,26 @@ public class ArticleMapper {
         if (article == null)
             return null;
 
-        return new JpaArticle(
-                article.getTitle(),
-                article.getIntroduction(),
-                article.getCoverImageId()
+        JpaArticle jpaArticle = new JpaArticle();
+        // This is for JPA to find the record
+        jpaArticle.setArticleId(article.getId().id());
+
+        jpaArticle.setTitle(article.getTitle());
+        jpaArticle.setIntroduction(article.getIntroduction());
+        jpaArticle.setCoverImageId(article.getCoverImageId());
+
+        return jpaArticle;
+    }
+
+    public Article toDomain(JpaArticle jpaArticle) {
+        if (jpaArticle == null)
+            return null;
+
+        return Article.rehydrate(
+                jpaArticle.getArticleId(),
+                jpaArticle.getTitle(),
+                jpaArticle.getIntroduction(),
+                jpaArticle.getCoverImageId()
         );
     }
 }

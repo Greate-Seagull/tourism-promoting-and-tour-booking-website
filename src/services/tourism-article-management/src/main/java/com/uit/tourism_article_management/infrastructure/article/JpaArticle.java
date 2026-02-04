@@ -2,6 +2,7 @@ package com.uit.tourism_article_management.infrastructure.article;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
@@ -12,13 +13,10 @@ public class JpaArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String articleId;
-    private final String title;
-    private final String introduction;
-    private final String coverImageId;
+    private String title;
+    private String introduction;
+    private String coverImageId;
 
-    public JpaArticle(String title, String introduction, String coverImageId) {
-        this.title = title;
-        this.introduction = introduction;
-        this.coverImageId = coverImageId;
-    }
+    // This is for JPA to build
+    public JpaArticle() {};
 }
