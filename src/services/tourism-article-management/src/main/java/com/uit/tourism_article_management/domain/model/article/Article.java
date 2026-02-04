@@ -38,7 +38,7 @@ public class Article {
         this.coverImageId = coverImageId;
     }
 
-    private void changeIntroduction(String introduction) {
+    public void changeIntroduction(String introduction) {
         if (introduction == null)
             throw new MissingFieldException("introduction");
         if (introduction.isBlank())
