@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant ":ReplaceCoverImageUsecase" as U
+participant ":MediaStore" as W
+
+[o-> U: execute
+activate U
+
+alt cover image not null
+
+U -> W: replace
+activate W
+deactivate W
+
+end
+
+@enduml

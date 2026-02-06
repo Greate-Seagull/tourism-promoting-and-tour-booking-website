@@ -9,7 +9,6 @@ import com.uit.tourism_article_management.application.command.create_article.Cre
 import com.uit.tourism_article_management.presentation.dto.ApiResponse;
 import com.uit.tourism_article_management.presentation.dto.ChangeIntroductionRequestBody;
 import com.uit.tourism_article_management.presentation.dto.ChangeTitleRequestBody;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,10 @@ public class ArticleController {
     private final ChangeTitleUsecase changeTitleUsecase;
     private final ChangeIntroductionUsecase changeIntroductionUsecase;
 
-    public ArticleController(CreateArticleUsecase createArticleUsecase, ChangeTitleUsecase changeTitleUsecase, ChangeIntroductionUsecase changeIntroductionUsecase) {
+    public ArticleController(CreateArticleUsecase createArticleUsecase,
+                             ChangeTitleUsecase changeTitleUsecase,
+                             ChangeIntroductionUsecase changeIntroductionUsecase
+    ) {
         this.createArticleUsecase = createArticleUsecase;
         this.changeTitleUsecase = changeTitleUsecase;
         this.changeIntroductionUsecase = changeIntroductionUsecase;
@@ -39,7 +41,7 @@ public class ArticleController {
         return ResponseEntity.ok(ApiResponse.builder().build());
     }
 
-    @PatchMapping("{id}/introduction")
+    @PatchMapping("/{id}/introduction")
     public ResponseEntity<ApiResponse> changeIntroduction(@PathVariable String id, @RequestBody ChangeIntroductionRequestBody body) {
         ChangeIntroductionCommand request = new ChangeIntroductionCommand(id, body.introduction());
         this.changeIntroductionUsecase.execute(request);

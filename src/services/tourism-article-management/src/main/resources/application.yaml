@@ -7,3 +7,10 @@ spring:
     password: root
   jpa:
     show-sql: true
+  data:
+    mongo:
+      uri: mongodb://localhost:27017
+      database: resource_management
+  servlet:
+    multipart:
+      enabled: false
