@@ -49,7 +49,8 @@ public class GridFSMediaStore implements MediaStore {
         this.gridBucket.delete(new ObjectId(resourceId));
     }
 
-    private void store(Media media, InputStream stream) {
+    @Override
+    public void store(Media media, InputStream stream) {
         this.gridBucket.uploadFromStream(
                 new BsonObjectId(new ObjectId(media.getFile().resourceId())),
                 media.getFile().name(),

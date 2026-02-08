@@ -10,4 +10,5 @@ public interface MediaStore {
     String nextResourceIdentity();
     Optional<Media> getById(MediaId mediaId);
     void replace(Media media, InputStream stream);
+    void store(Media media, InputStream stream);
 }

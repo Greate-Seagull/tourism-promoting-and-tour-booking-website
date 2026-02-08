@@ -2,7 +2,8 @@ spring:
   application:
     name: tourism-article-management
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/
+    database: tourism_article_management
     username: postgres
     password: root
   jpa:
@@ -11,6 +12,15 @@ spring:
     mongo:
       uri: mongodb://localhost:27017
       database: resource_management
+    redis:
+#      url: redis://localhost:6379/0
+      host: localhost
+      port: 6379
+      database: 0
   servlet:
     multipart:
       enabled: false
+
+jwt:
+  secret: 4891a5d9adc0636af65e6f88f5302d92e7ba8912cbdf168f73c1bb2a790d3b0b
+  issuer: tourism-article-management

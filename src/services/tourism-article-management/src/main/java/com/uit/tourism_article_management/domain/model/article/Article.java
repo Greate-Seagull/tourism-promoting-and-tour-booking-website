@@ -3,38 +3,41 @@ package com.uit.tourism_article_management.domain.model.article;
 import com.uit.tourism_article_management.domain.exception.BlankTextException;
 import com.uit.tourism_article_management.domain.exception.InvalidSizeException;
 import com.uit.tourism_article_management.domain.exception.MissingFieldException;
+import com.uit.tourism_article_management.domain.model.media.MediaId;
 
 public class Article {
     private final ArticleId id;
     private String title;
     private String introduction;
-    private String coverImageId;
+    private MediaId coverImageId;
 
     private Article(ArticleId id) {
+        if (id == null)
+            throw new MissingFieldException("articleId");
+
         this.id = id;
     }
 
-    public static Article create(String title, String introduction, String coverImageId) {
-        Article article = new Article(new ArticleId(null));
-        article.changeTitle(title);
-        article.changeIntroduction(introduction);
-        article.changeCoverImage(coverImageId);
-        return article;
-    }
-
-    public static Article rehydrate(String articleId, String title, String introduction, String coverImageId) {
-        Article article = new Article(new ArticleId(articleId));
+    public static Article rehydrate(ArticleId articleId, String title, String introduction, MediaId coverImageId) {
+        Article article = new Article(articleId);
         article.title = title;
         article.introduction = introduction;
         article.coverImageId = coverImageId;
         return article;
     }
 
-    private void changeCoverImage(String coverImageId) {
+    public static Article create(ArticleId articleId, String title, String introduction, MediaId coverImageId) {
+        Article article = new Article(articleId);
+        article.changeTitle(title);
+        article.changeIntroduction(introduction);
+        article.changeCoverImage(coverImageId);
+        return article;
+    }
+
+    private void changeCoverImage(MediaId coverImageId) {
         if (coverImageId == null)
             throw new MissingFieldException("coverImageId");
-        if (coverImageId.isBlank())
-            throw new BlankTextException("coverImageId");
+
         this.coverImageId = coverImageId;
     }
 
@@ -66,11 +69,11 @@ public class Article {
         return introduction;
     }
 
-    public String getCoverImageId() {
-        return coverImageId;
-    }
-
     public ArticleId getId() {
         return id;
+    }
+
+    public MediaId getCoverImageId() {
+        return coverImageId;
     }
 }

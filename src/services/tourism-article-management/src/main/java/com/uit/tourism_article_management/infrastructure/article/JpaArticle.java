@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 public class JpaArticle {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String articleId;
     private String title;
     private String introduction;

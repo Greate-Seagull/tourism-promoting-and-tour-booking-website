@@ -5,12 +5,17 @@ import com.uit.tourism_article_management.application.command.change_introductio
 import com.uit.tourism_article_management.application.command.change_title.ChangeTitleCommand;
 import com.uit.tourism_article_management.application.command.change_title.ChangeTitleUsecase;
 import com.uit.tourism_article_management.application.command.create_article.CreateArticleCommand;
+import com.uit.tourism_article_management.application.command.create_article.CreateArticleResult;
 import com.uit.tourism_article_management.application.command.create_article.CreateArticleUsecase;
+import com.uit.tourism_article_management.application.command.initiate_article_creating_session.InitiateArticleCreatingSession;
 import com.uit.tourism_article_management.presentation.dto.ApiResponse;
 import com.uit.tourism_article_management.presentation.dto.ChangeIntroductionRequestBody;
 import com.uit.tourism_article_management.presentation.dto.ChangeTitleRequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/articles")
@@ -18,20 +23,30 @@ public class ArticleController {
     private final CreateArticleUsecase createArticleUsecase;
     private final ChangeTitleUsecase changeTitleUsecase;
     private final ChangeIntroductionUsecase changeIntroductionUsecase;
+    private final InitiateArticleCreatingSession initiateArticleCreatingSession;
 
     public ArticleController(CreateArticleUsecase createArticleUsecase,
                              ChangeTitleUsecase changeTitleUsecase,
-                             ChangeIntroductionUsecase changeIntroductionUsecase
+                             ChangeIntroductionUsecase changeIntroductionUsecase, InitiateArticleCreatingSession initiateArticleCreatingSession
     ) {
         this.createArticleUsecase = createArticleUsecase;
         this.changeTitleUsecase = changeTitleUsecase;
         this.changeIntroductionUsecase = changeIntroductionUsecase;
+        this.initiateArticleCreatingSession = initiateArticleCreatingSession;
     }
 
     @PostMapping()
     public ResponseEntity<ApiResponse> createArticle(@RequestBody CreateArticleCommand request){
-        this.createArticleUsecase.execute(request);
-        return ResponseEntity.ok(ApiResponse.builder().build());
+        final CreateArticleResult result = this.createArticleUsecase.execute(request);
+        final String token = this.initiateArticleCreatingSession.execute(result.title(), result.coverImageId());
+
+        URI location = UriComponentsBuilder
+                .fromUriString("http://localhost:8080/media")
+                .queryParam("session_id", token)
+                .build()
+                .toUri();
+
+        return ResponseEntity.created(location).body(ApiResponse.builder().build());
     }
 
     @PatchMapping("/{id}/title")

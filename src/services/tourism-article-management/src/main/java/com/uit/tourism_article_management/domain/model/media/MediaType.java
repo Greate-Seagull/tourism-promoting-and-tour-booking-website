@@ -4,7 +4,9 @@ package com.uit.tourism_article_management.domain.model.media;
 import com.uit.tourism_article_management.domain.exception.UnsupportedMimeTypeException;
 
 public enum MediaType {
-    IMAGE_JPEG("image/jpeg");
+    IMAGE_JPEG("image/jpeg"),
+    IMAGE_PNG("image/png"),
+    ;
 
     private final String mimeType;
 

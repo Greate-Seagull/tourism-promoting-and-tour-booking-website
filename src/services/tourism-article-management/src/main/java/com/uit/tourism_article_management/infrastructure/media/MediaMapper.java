@@ -1,7 +1,6 @@
 package com.uit.tourism_article_management.infrastructure.media;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
-import com.uit.tourism_article_management.domain.model.article.ArticleId;
 import com.uit.tourism_article_management.domain.model.media.Media;
 import com.uit.tourism_article_management.domain.model.media.MediaFile;
 import com.uit.tourism_article_management.domain.model.media.MediaId;

@@ -1,6 +1,8 @@
 package com.uit.tourism_article_management.infrastructure.article;
 
 import com.uit.tourism_article_management.domain.model.article.Article;
+import com.uit.tourism_article_management.domain.model.article.ArticleId;
+import com.uit.tourism_article_management.domain.model.media.MediaId;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,7 +17,7 @@ public class ArticleMapper {
 
         jpaArticle.setTitle(article.getTitle());
         jpaArticle.setIntroduction(article.getIntroduction());
-        jpaArticle.setCoverImageId(article.getCoverImageId());
+        jpaArticle.setCoverImageId(article.getCoverImageId().toString());
 
         return jpaArticle;
     }
@@ -25,10 +27,10 @@ public class ArticleMapper {
             return null;
 
         return Article.rehydrate(
-                jpaArticle.getArticleId(),
+                new ArticleId(jpaArticle.getArticleId()),
                 jpaArticle.getTitle(),
                 jpaArticle.getIntroduction(),
-                jpaArticle.getCoverImageId()
+                new MediaId(jpaArticle.getCoverImageId())
         );
     }
 }
