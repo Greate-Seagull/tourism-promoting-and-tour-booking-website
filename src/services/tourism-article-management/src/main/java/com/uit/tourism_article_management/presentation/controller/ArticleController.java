@@ -1,13 +1,13 @@
 package com.uit.tourism_article_management.presentation.controller;
 
-import com.uit.tourism_article_management.application.command.change_introduction.ChangeIntroductionCommand;
-import com.uit.tourism_article_management.application.command.change_introduction.ChangeIntroductionUsecase;
-import com.uit.tourism_article_management.application.command.change_title.ChangeTitleCommand;
-import com.uit.tourism_article_management.application.command.change_title.ChangeTitleUsecase;
-import com.uit.tourism_article_management.application.command.create_article.CreateArticleCommand;
-import com.uit.tourism_article_management.application.command.create_article.CreateArticleResult;
-import com.uit.tourism_article_management.application.command.create_article.CreateArticleUsecase;
-import com.uit.tourism_article_management.application.command.initiate_article_creating_session.InitiateArticleCreatingSession;
+import com.uit.tourism_article_management.application.command.sync.change_introduction.ChangeIntroductionCommand;
+import com.uit.tourism_article_management.application.command.sync.change_introduction.ChangeIntroductionUsecase;
+import com.uit.tourism_article_management.application.command.sync.change_title.ChangeTitleCommand;
+import com.uit.tourism_article_management.application.command.sync.change_title.ChangeTitleUsecase;
+import com.uit.tourism_article_management.application.command.sync.create_article.CreateArticleCommand;
+import com.uit.tourism_article_management.application.command.sync.create_article.CreateArticleResult;
+import com.uit.tourism_article_management.application.command.sync.create_article.CreateArticleUsecase;
+import com.uit.tourism_article_management.application.command.sync.initiate_article_creating_session.InitiateArticleCreatingSession;
 import com.uit.tourism_article_management.presentation.dto.ApiResponse;
 import com.uit.tourism_article_management.presentation.dto.ChangeIntroductionRequestBody;
 import com.uit.tourism_article_management.presentation.dto.ChangeTitleRequestBody;

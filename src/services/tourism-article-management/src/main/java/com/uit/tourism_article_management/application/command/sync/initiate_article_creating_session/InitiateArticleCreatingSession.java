@@ -1,4 +1,4 @@
-package com.uit.tourism_article_management.application.command.initiate_article_creating_session;
+package com.uit.tourism_article_management.application.command.sync.initiate_article_creating_session;
 
 import com.uit.tourism_article_management.application.port.TokenService;
 import com.uit.tourism_article_management.application.port.TokenStore;

@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant Client
+participant ":MediaController" as MC
+participant ":UploadResourceUsecase" as URU
+participant ":Media" as ME
+participant ":MediaStore" as MS
+participant ":SessionManagement" as SM
+
+Client -> MC: uploadResource
+activate MC
+
+MC -> SM: validate
+activate SM
+deactivate SM
+
+MC -> URU: execute
+activate URU
+create ME
+URU -> ME: create
+URU -> MS: upload
+deactivate URU
+
+MC -> SM: invalidate
+activate SM
+deactivate SM
+
+deactivate MC
+@enduml

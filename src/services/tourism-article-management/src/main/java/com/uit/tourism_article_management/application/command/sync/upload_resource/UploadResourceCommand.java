@@ -1,4 +1,4 @@
-package com.uit.tourism_article_management.application.command.upload_resource;
+package com.uit.tourism_article_management.application.command.sync.upload_resource;
 
 import java.io.InputStream;
 

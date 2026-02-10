@@ -1,4 +1,4 @@
-package com.uit.tourism_article_management.application.command.invalidate_token;
+package com.uit.tourism_article_management.application.command.sync.invalidate_token;
 
 import com.uit.tourism_article_management.application.port.TokenStore;
 import org.springframework.stereotype.Service;

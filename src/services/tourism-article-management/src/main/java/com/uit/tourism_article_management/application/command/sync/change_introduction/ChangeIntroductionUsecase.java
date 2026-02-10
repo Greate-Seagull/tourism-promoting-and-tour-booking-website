@@ -1,4 +1,4 @@
-package com.uit.tourism_article_management.application.command.change_introduction;
+package com.uit.tourism_article_management.application.command.sync.change_introduction;
 
 import com.uit.tourism_article_management.application.port.ArticleRepository;
 import com.uit.tourism_article_management.domain.exception.AggregateNotFound;

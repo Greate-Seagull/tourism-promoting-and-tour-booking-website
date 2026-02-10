@@ -13,6 +13,7 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Optional;
 
 @Component
@@ -33,7 +34,7 @@ public class GridFSMediaStore implements MediaStore {
     @Override
     public Optional<Media> getById(MediaId mediaId) {
         final GridFSFile file = this.gridBucket.find(
-                Filters.eq("media_id", mediaId.id())
+                Filters.eq("metadata.media_id", mediaId.id())
         ).first();
 
         return Optional.ofNullable(mapper.toDomain(file));
@@ -41,16 +42,18 @@ public class GridFSMediaStore implements MediaStore {
 
     @Override
     public void replace(Media media, InputStream stream) {
-        this.store(media, stream);
+        this.upload(media, stream);
         this.deleteByResourceId(media.getFile().resourceId());
     }
 
-    private void deleteByResourceId(String resourceId) {
+    @Override
+    public void deleteByResourceId(String resourceId) {
         this.gridBucket.delete(new ObjectId(resourceId));
+        System.out.println("Resource deleted with resource id: " + resourceId);
     }
 
     @Override
-    public void store(Media media, InputStream stream) {
+    public void upload(Media media, InputStream stream) {
         this.gridBucket.uploadFromStream(
                 new BsonObjectId(new ObjectId(media.getFile().resourceId())),
                 media.getFile().name(),
@@ -61,5 +64,18 @@ public class GridFSMediaStore implements MediaStore {
                                 .append("media_type", media.getFile().type().toString())
                 )
         );
+    }
+
+    @Override
+    public void download(OutputStream response, String resourceId) {
+        this.gridBucket.downloadToStream(new ObjectId(resourceId), response);
+    }
+
+    @Override
+    public void download(OutputStream response, MediaId mediaId) {
+        final GridFSFile file = this.gridBucket.find(Filters.eq("metadata.media_id", mediaId.toString()))
+                .first();
+
+        this.gridBucket.downloadToStream(file.getObjectId(), response);
     }
 }

@@ -1,4 +1,4 @@
-package com.uit.tourism_article_management.application.command.create_article;
+package com.uit.tourism_article_management.application.command.sync.create_article;
 
 import com.uit.tourism_article_management.application.port.ArticleRepository;
 import com.uit.tourism_article_management.domain.model.article.Article;

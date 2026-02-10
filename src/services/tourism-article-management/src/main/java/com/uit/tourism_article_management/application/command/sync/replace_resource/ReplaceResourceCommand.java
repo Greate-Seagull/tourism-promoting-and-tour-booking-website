@@ -1,4 +1,4 @@
-package com.uit.tourism_article_management.application.command.replace_resource;
+package com.uit.tourism_article_management.application.command.sync.replace_resource;
 
 import java.io.InputStream;
 

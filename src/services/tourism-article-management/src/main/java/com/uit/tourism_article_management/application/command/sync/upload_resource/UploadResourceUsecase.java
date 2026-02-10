@@ -1,4 +1,4 @@
-package com.uit.tourism_article_management.application.command.upload_resource;
+package com.uit.tourism_article_management.application.command.sync.upload_resource;
 
 import com.uit.tourism_article_management.application.port.MediaStore;
 import com.uit.tourism_article_management.domain.model.media.Media;
@@ -24,6 +24,6 @@ public class UploadResourceUsecase {
         );
         final Media media = Media.create(mediaId, mediaFile);
 
-        this.mediaStore.store(media, command.stream());
+        this.mediaStore.upload(media, command.stream());
     }
 }

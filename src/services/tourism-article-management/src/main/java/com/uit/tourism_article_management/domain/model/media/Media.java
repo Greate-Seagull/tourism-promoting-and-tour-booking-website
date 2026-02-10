@@ -1,8 +1,9 @@
 package com.uit.tourism_article_management.domain.model.media;
 
 import com.uit.tourism_article_management.domain.exception.MissingFieldException;
+import com.uit.tourism_article_management.domain.model.AggregateRoot;
 
-public class Media {
+public class Media extends AggregateRoot {
     private final MediaId id;
     private MediaFile file;
 
@@ -24,8 +25,11 @@ public class Media {
         return media;
     }
 
-    public void changeResource(MediaType mediaType, String resourceId) {
-        this.file = this.file.withResource(mediaType, resourceId);
+    public void changeResource(MediaType mediaType, String newResourceId) {
+        final String oldResourceId = this.file.resourceId();
+        this.file = this.file.withResource(mediaType, newResourceId);
+
+        this.apply(new ResourceChanged(id, newResourceId, oldResourceId));
     }
 
     public MediaFile getFile() {

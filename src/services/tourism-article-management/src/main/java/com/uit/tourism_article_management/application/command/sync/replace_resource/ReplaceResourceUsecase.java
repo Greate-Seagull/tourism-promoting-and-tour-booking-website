@@ -1,6 +1,7 @@
-package com.uit.tourism_article_management.application.command.replace_resource;
+package com.uit.tourism_article_management.application.command.sync.replace_resource;
 
 import com.uit.tourism_article_management.application.port.MediaStore;
+import com.uit.tourism_article_management.domain.event.DomainEventPublisher;
 import com.uit.tourism_article_management.domain.exception.AggregateNotFound;
 import com.uit.tourism_article_management.domain.model.media.Media;
 import com.uit.tourism_article_management.domain.model.media.MediaId;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReplaceResourceUsecase {
     private final MediaStore mediaStore;
+    private final DomainEventPublisher eventPublisher;
 
-    public ReplaceResourceUsecase(MediaStore mediaStore) {
+    public ReplaceResourceUsecase(MediaStore mediaStore, DomainEventPublisher eventPublisher) {
         this.mediaStore = mediaStore;
+        this.eventPublisher = eventPublisher;
     }
 
     public void execute(ReplaceResourceCommand command) {
@@ -25,6 +28,8 @@ public class ReplaceResourceUsecase {
             this.mediaStore.nextResourceIdentity()
         );
 
-        this.mediaStore.replace(media, command.stream());
+        this.mediaStore.upload(media, command.stream());
+
+        this.eventPublisher.publish(media.getEvents());
     }
 }

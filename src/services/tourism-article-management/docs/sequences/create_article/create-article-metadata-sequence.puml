@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant Client
+participant ":ArticleController" as AC
+participant ":CreateArticleUsecase" as CAU
+participant ":Article" as AE
+participant ":ArticleRepository" as AR
+participant ":SessionManagement" as SM
+
+Client -> AC: createArticle
+activate AC
+
+AC -> CAU: execute
+activate CAU
+CAU -> AR: nextArticleIdentity
+CAU -> AR: nextMediaIdentity
+create AE
+CAU -> AE: create
+CAU -> AR: save
+deactivate CAU
+
+AC -> SM: initiate
+activate SM
+deactivate SM
+
+deactivate AC
+@enduml
