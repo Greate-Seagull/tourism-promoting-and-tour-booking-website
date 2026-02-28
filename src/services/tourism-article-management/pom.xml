@@ -107,6 +107,20 @@
 			<version>3.0.0-rc2</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/tools.jackson.datatype/jackson-datatype-hibernate7 -->
+		<dependency>
+			<groupId>tools.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-hibernate7</artifactId>
+			<version>3.1.0-rc1</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>33.5.0-jre</version>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

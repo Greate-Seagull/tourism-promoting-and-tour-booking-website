@@ -2,12 +2,14 @@ package com.uit.tourism_article_management.infrastructure.messaging;
 
 import com.uit.tourism_article_management.domain.event.DomainEvent;
 import com.uit.tourism_article_management.domain.event.DomainEventPublisher;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@Slf4j
 public class RedisEventPublisher implements DomainEventPublisher {
     public static final String CHANNEL_PREFIX = "channel:";
 
@@ -25,5 +27,6 @@ public class RedisEventPublisher implements DomainEventPublisher {
     private void publish(DomainEvent event) {
         String channel = CHANNEL_PREFIX + event.getClass().getSimpleName();
         this.template.convertAndSend(channel, event);
+        log.info("Event published: {}", event);
     }
 }

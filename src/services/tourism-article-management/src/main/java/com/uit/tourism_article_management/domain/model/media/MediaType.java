@@ -1,7 +1,7 @@
 package com.uit.tourism_article_management.domain.model.media;
 
 
-import com.uit.tourism_article_management.domain.exception.UnsupportedMimeTypeException;
+import com.uit.tourism_article_management.domain.exception.UnsupportedType;
 
 public enum MediaType {
     IMAGE_JPEG("image/jpeg"),
@@ -14,13 +14,13 @@ public enum MediaType {
         this.mimeType = mimeType;
     }
 
-    public static MediaType fromString(String mimeType) {
+    public static MediaType existingType(String mimeType) {
         for(MediaType mediaType : MediaType.values()) {
             if (mediaType.getMimeType().equalsIgnoreCase(mimeType))
                 return mediaType;
         }
 
-        throw new UnsupportedMimeTypeException(mimeType);
+        throw new UnsupportedType(mimeType);
     }
 
     public String getMimeType() {

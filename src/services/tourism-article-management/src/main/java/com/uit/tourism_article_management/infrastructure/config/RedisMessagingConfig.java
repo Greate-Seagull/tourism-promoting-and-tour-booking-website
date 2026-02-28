@@ -1,7 +1,6 @@
 package com.uit.tourism_article_management.infrastructure.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.uit.tourism_article_management.domain.model.media.ResourceChanged;
 import com.uit.tourism_article_management.infrastructure.messaging.RedisEventPublisher;
 import com.uit.tourism_article_management.infrastructure.messaging.RedisEventSubscriber;
 import org.springframework.context.annotation.Bean;
@@ -79,7 +78,7 @@ public class RedisMessagingConfig {
 
         container.addMessageListener(
                 listenerAdapter,
-                new PatternTopic(RedisEventPublisher.CHANNEL_PREFIX + ResourceChanged.class.getSimpleName())
+                new PatternTopic(RedisEventPublisher.CHANNEL_PREFIX + "*")
         );
 
         return container;

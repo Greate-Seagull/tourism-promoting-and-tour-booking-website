@@ -5,7 +5,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.uit.tourism_article_management.application.port.TokenService;
+import com.uit.tourism_article_management.application.port.token.TokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

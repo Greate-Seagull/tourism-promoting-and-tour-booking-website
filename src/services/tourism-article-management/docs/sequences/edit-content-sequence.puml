@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+alt for each resources
+Client -> Server: uploadResource
+Server --> Client: resourceId
+end
+
+Client -> Server: editContent
+Server -> Database: save
+Server -> Database: publishEvent
+
+alt catch event
+Server -> Database: adjustReferenceCounter
+end
+
+alt everyday
+Server -> Database: clearOrphan
+end
+
+@enduml

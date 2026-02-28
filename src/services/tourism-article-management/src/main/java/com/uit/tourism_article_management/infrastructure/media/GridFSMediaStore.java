@@ -4,7 +4,7 @@ import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import com.mongodb.client.model.Filters;
-import com.uit.tourism_article_management.application.port.MediaStore;
+import com.uit.tourism_article_management.application.port.media.MediaStore;
 import com.uit.tourism_article_management.domain.model.media.Media;
 import com.uit.tourism_article_management.domain.model.media.MediaId;
 import org.bson.BsonObjectId;
@@ -14,68 +14,58 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Optional;
 
 @Component
 public class GridFSMediaStore implements MediaStore {
     private final GridFSBucket gridBucket;
-    private final MediaMapper mapper;
 
-    public GridFSMediaStore(GridFSBucket gridBucket, MediaMapper mapper) {
+    public GridFSMediaStore(GridFSBucket gridBucket) {
         this.gridBucket = gridBucket;
-        this.mapper = mapper;
     }
 
     @Override
-    public String nextResourceIdentity() {
-        return new ObjectId().toHexString();
-    }
-
-    @Override
-    public Optional<Media> getById(MediaId mediaId) {
-        final GridFSFile file = this.gridBucket.find(
-                Filters.eq("metadata.media_id", mediaId.id())
-        ).first();
-
-        return Optional.ofNullable(mapper.toDomain(file));
-    }
-
-    @Override
-    public void replace(Media media, InputStream stream) {
-        this.upload(media, stream);
-        this.deleteByResourceId(media.getFile().resourceId());
-    }
-
-    @Override
-    public void deleteByResourceId(String resourceId) {
-        this.gridBucket.delete(new ObjectId(resourceId));
-        System.out.println("Resource deleted with resource id: " + resourceId);
+    public MediaId nextIdentity() {
+        return new MediaId(new ObjectId().toHexString());
     }
 
     @Override
     public void upload(Media media, InputStream stream) {
         this.gridBucket.uploadFromStream(
-                new BsonObjectId(new ObjectId(media.getFile().resourceId())),
-                media.getFile().name(),
+                new BsonObjectId(new ObjectId(media.getId().id())),
+                media.getName().name(),
                 stream,
                 new GridFSUploadOptions().metadata(
                         new Document()
-                                .append("media_id", media.getId().toString())
-                                .append("media_type", media.getFile().type().toString())
+                                .append("media_type", media.getType().getMimeType())
+                                .append("checksum", media.getChecksum())
                 )
         );
     }
 
     @Override
-    public void download(OutputStream response, String resourceId) {
-        this.gridBucket.downloadToStream(new ObjectId(resourceId), response);
+    public void download(OutputStream response, MediaId id) {
+        this.gridBucket.downloadToStream(new ObjectId(id.id()), response);
     }
 
     @Override
-    public void download(OutputStream response, MediaId mediaId) {
-        final GridFSFile file = this.gridBucket.find(Filters.eq("metadata.media_id", mediaId.toString()))
+    public void deleteById(MediaId id) {
+        this.gridBucket.delete(new ObjectId(id.id()));
+    }
+
+    @Override
+    public Optional<MediaId> getIdByChecksum(String checksum) {
+        final GridFSFile file = this.gridBucket
+                .find(Filters.eq("metadata.checksum", checksum))
                 .first();
 
-        this.gridBucket.downloadToStream(file.getObjectId(), response);
+        return Optional.ofNullable(file)
+                .map(f -> MediaId.existing(file.getObjectId().toHexString()));
+    }
+
+    @Override
+    public void deleteManyById(Collection<MediaId> ids) {
+        ids.parallelStream().forEach(id -> this.gridBucket.delete(new ObjectId(id.id())));
     }
 }

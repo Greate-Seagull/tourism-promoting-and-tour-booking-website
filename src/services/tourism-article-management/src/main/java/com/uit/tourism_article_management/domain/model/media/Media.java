@@ -1,42 +1,35 @@
 package com.uit.tourism_article_management.domain.model.media;
 
-import com.uit.tourism_article_management.domain.exception.MissingFieldException;
 import com.uit.tourism_article_management.domain.model.AggregateRoot;
 
 public class Media extends AggregateRoot {
     private final MediaId id;
-    private MediaFile file;
+    private final String checksum;
+    private MediaName name;
+    private MediaType type;
 
-    private Media(MediaId id) {
-        if (id == null)
-            throw new MissingFieldException("mediaId");
+    public Media(MediaId id, String checksum, MediaType type) {
         this.id = id;
-    }
+        this.checksum = checksum;
+        this.name = MediaName.generateName();
+        this.type = type;
 
-    public static Media create(MediaId id, MediaFile file) {
-        Media media = new Media(id);
-        media.file = file;
-        return media;
-    }
-
-    public static Media rehydrate(MediaId mediaId, MediaFile mediaFile) {
-        Media media = new Media(mediaId);
-        media.file = mediaFile;
-        return media;
-    }
-
-    public void changeResource(MediaType mediaType, String newResourceId) {
-        final String oldResourceId = this.file.resourceId();
-        this.file = this.file.withResource(mediaType, newResourceId);
-
-        this.apply(new ResourceChanged(id, newResourceId, oldResourceId));
-    }
-
-    public MediaFile getFile() {
-        return file;
+        this.apply(new MediaCreated(this.id));
     }
 
     public MediaId getId() {
         return id;
+    }
+
+    public MediaName getName() {
+        return name;
+    }
+
+    public MediaType getType() {
+        return type;
+    }
+
+    public String getChecksum() {
+        return checksum;
     }
 }

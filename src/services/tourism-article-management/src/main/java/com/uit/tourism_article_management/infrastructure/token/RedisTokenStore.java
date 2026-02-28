@@ -1,6 +1,6 @@
 package com.uit.tourism_article_management.infrastructure.token;
 
-import com.uit.tourism_article_management.application.port.TokenStore;
+import com.uit.tourism_article_management.application.port.token.TokenStore;
 import com.uit.tourism_article_management.domain.model.session.TokenTtl;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;

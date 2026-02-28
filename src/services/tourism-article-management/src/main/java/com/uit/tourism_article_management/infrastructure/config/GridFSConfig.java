@@ -5,6 +5,8 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
+import com.mongodb.client.model.IndexOptions;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +24,17 @@ public class GridFSConfig {
     }
 
     @Bean
-    public GridFSBucket gridFSBucket(MongoClient mongoClient) {
-        MongoDatabase database = mongoClient.getDatabase(databaseName);
-        return GridFSBuckets.create(database);
+    public MongoDatabase mongoDatabase(MongoClient mongoClient) {
+        return mongoClient.getDatabase(databaseName);
+    }
+
+    @Bean
+    public GridFSBucket gridFSBucket(MongoDatabase database) {
+        var bucket = GridFSBuckets.create(database);
+        database.getCollection("fs.files").createIndex(
+                new Document("metadata.checksum", 1),
+                new IndexOptions().background(true)
+        );
+        return bucket;
     }
 }

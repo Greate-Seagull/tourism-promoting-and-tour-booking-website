@@ -1,8 +1,8 @@
 package com.uit.tourism_article_management.application.query.validate_article_creating_session;
 
 import com.uit.tourism_article_management.application.exception.SessionInvalid;
-import com.uit.tourism_article_management.application.port.TokenService;
-import com.uit.tourism_article_management.application.port.TokenStore;
+import com.uit.tourism_article_management.application.port.token.TokenService;
+import com.uit.tourism_article_management.application.port.token.TokenStore;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
