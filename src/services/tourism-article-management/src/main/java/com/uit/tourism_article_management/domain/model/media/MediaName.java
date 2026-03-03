@@ -9,4 +9,8 @@ public record MediaName(String name) {
         String timestamp = dtf.format(LocalDateTime.now());
         return new MediaName("upload" + timestamp);
     }
+
+    public static MediaName existing(String filename) {
+        return new MediaName(filename);
+    }
 }

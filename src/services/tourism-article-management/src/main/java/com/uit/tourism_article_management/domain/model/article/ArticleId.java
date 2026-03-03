@@ -3,7 +3,7 @@ package com.uit.tourism_article_management.domain.model.article;
 import java.util.UUID;
 
 public record ArticleId(String id) {
-    public static ArticleId existingArticleId(String rawId) {
+    public static ArticleId existing(String rawId) {
         return new ArticleId(rawId);
     }
 

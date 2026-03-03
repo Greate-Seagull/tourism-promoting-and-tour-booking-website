@@ -8,16 +8,22 @@ import java.util.Collection;
 import java.util.Comparator;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "content"})
+@JsonPropertyOrder({"id", "title", "introduction", "coverImageId", "content"})
 public record ArticleResponse(
         String id,
+        String title,
+        String introduction,
+        String coverImageId,
         Collection<ArticleBlockResponse> content
 ) {
 
-    public static ArticleResponse fromDomain(Article result) {
+    public static ArticleResponse fromDomain(Article domain) {
         return new ArticleResponse(
-                result.getId().id(),
-                result.getContent().stream()
+                domain.getId().id(),
+                domain.getTitle(),
+                domain.getIntroduction(),
+                domain.getCoverImageId().id(),
+                domain.getContent().stream()
                         .map(ArticleBlockResponse::fromDomain)
                         .sorted(Comparator.comparing(ArticleBlockResponse::order))
                         .toList()

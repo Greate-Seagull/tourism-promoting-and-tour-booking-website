@@ -21,7 +21,7 @@ public class EditArticleContentUsecase {
     }
 
     public Article execute(EditArticleContentCommand command) {
-        Article article = this.repo.getById(ArticleId.existingArticleId(command.articleId()))
+        Article article = this.repo.getById(ArticleId.existing(command.articleId()))
                 .orElseThrow(() -> new AggregateNotFound("Article", command.articleId()));
 
         article.editContent(command.toDomain());

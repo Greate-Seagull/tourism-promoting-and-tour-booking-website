@@ -10,6 +10,7 @@ import com.uit.tourism_article_management.domain.model.media.MediaId;
 import org.bson.BsonObjectId;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -18,11 +19,17 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Component
+@Qualifier("original")
 public class GridFSMediaStore implements MediaStore {
     private final GridFSBucket gridBucket;
+    private final GridFSMediaMapper mapper;
 
-    public GridFSMediaStore(GridFSBucket gridBucket) {
+    public GridFSMediaStore(
+            GridFSBucket gridBucket,
+            GridFSMediaMapper mapper
+    ) {
         this.gridBucket = gridBucket;
+        this.mapper = mapper;
     }
 
     @Override
@@ -45,7 +52,7 @@ public class GridFSMediaStore implements MediaStore {
     }
 
     @Override
-    public void download(OutputStream response, MediaId id) {
+    public void download(MediaId id, OutputStream response) {
         this.gridBucket.downloadToStream(new ObjectId(id.id()), response);
     }
 
@@ -67,5 +74,17 @@ public class GridFSMediaStore implements MediaStore {
     @Override
     public void deleteManyById(Collection<MediaId> ids) {
         ids.parallelStream().forEach(id -> this.gridBucket.delete(new ObjectId(id.id())));
+    }
+
+    @Override
+    public Optional<Media> getById(MediaId id) {
+        return this.mapper.toDomain(
+                this.gridBucket.find(Filters.eq("_id", new ObjectId(id.id())))
+                        .first()
+        );
+    }
+
+    public InputStream download(MediaId id){
+        return this.gridBucket.openDownloadStream(new ObjectId(id.id()));
     }
 }

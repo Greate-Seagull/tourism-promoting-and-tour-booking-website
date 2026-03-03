@@ -11,6 +11,7 @@ import com.uit.tourism_article_management.application.command.sync.article.edit_
 import com.uit.tourism_article_management.application.command.sync.article.edit_article_content.EditArticleContentUsecase;
 import com.uit.tourism_article_management.application.command.sync.token.initiate_article_creating_session.InitiateArticleCreatingSession;
 import com.uit.tourism_article_management.application.port.article.ArticleRepository;
+import com.uit.tourism_article_management.application.query.media.GetSingleArticleQuery;
 import com.uit.tourism_article_management.domain.exception.AggregateNotFound;
 import com.uit.tourism_article_management.domain.model.article.Article;
 import com.uit.tourism_article_management.domain.model.article.ArticleId;
@@ -31,22 +32,21 @@ public class ArticleController {
     private final ChangeIntroductionUsecase changeIntroductionUsecase;
     private final InitiateArticleCreatingSession initiateArticleCreatingSession;
     private final EditArticleContentUsecase editArticleContentUsecase;
-
-    private final ArticleRepository repo;
+    private final GetSingleArticleQuery getArticle;
 
     public ArticleController(CreateArticleUsecase createArticleUsecase,
                              ChangeTitleUsecase changeTitleUsecase,
                              ChangeIntroductionUsecase changeIntroductionUsecase,
                              InitiateArticleCreatingSession initiateArticleCreatingSession,
                              EditArticleContentUsecase editArticleContentUsecase,
-                             ArticleRepository repo
+                             GetSingleArticleQuery getArticle
     ) {
         this.createArticleUsecase = createArticleUsecase;
         this.changeTitleUsecase = changeTitleUsecase;
         this.changeIntroductionUsecase = changeIntroductionUsecase;
         this.initiateArticleCreatingSession = initiateArticleCreatingSession;
         this.editArticleContentUsecase = editArticleContentUsecase;
-        this.repo = repo;
+        this.getArticle = getArticle;
     }
 
         @PostMapping()
@@ -131,11 +131,11 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getById(@PathVariable String id) {
-        Article article = repo.getById(new ArticleId(id)).orElseThrow(() -> new AggregateNotFound("Article", id));
+    public ResponseEntity<ApiResponse> getAnArticle(@PathVariable String id) {
+        var article = this.getArticle.execute(id);
         return ResponseEntity.ok(
                 ApiResponse.builder()
-                        .result(article)
+                        .result(ArticleResponse.fromDomain(article))
                         .build()
         );
     }

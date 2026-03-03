@@ -8,16 +8,16 @@ import org.springframework.stereotype.Service;
 import java.io.OutputStream;
 
 @Service
-public class DownloadResourceByIdQuery {
+public class StreamResourceQuery {
     private final MediaStore mediaStore;
 
-    public DownloadResourceByIdQuery(MediaStore mediaStore) {
+    public StreamResourceQuery(MediaStore mediaStore) {
         this.mediaStore = mediaStore;
     }
 
-    public void execute(OutputStream response, String mediaId) {
+    public void execute(String mediaId, OutputStream response) {
         try{
-            this.mediaStore.download(response, new MediaId(mediaId));
+            this.mediaStore.download(new MediaId(mediaId), response);
         } catch (RuntimeException e) {
             throw new AggregateNotFound("Media", mediaId);
         }
