@@ -22,7 +22,7 @@ public class JpaMediaReference {
 
     public MediaReference toDomain() {
         return MediaReference.rehydrate(
-                MediaId.existing(mediaId),
+                new MediaId(mediaId),
                 count,
                 updatedAt
         );

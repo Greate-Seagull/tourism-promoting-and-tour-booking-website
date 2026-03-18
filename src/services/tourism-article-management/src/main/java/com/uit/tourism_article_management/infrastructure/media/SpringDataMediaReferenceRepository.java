@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.Optional;
 
 @Repository
 public class SpringDataMediaReferenceRepository implements MediaReferenceRepository {
@@ -15,6 +16,11 @@ public class SpringDataMediaReferenceRepository implements MediaReferenceReposit
 
     public SpringDataMediaReferenceRepository(JpaMediaReferenceRepository repository) {
         this.repository = repository;
+    }
+
+    @Override
+    public Optional<MediaReference> getById(MediaId id) {
+        return this.repository.findById(id.id()).map(JpaMediaReference::toDomain);
     }
 
     @Override
@@ -37,7 +43,7 @@ public class SpringDataMediaReferenceRepository implements MediaReferenceReposit
     public Collection<MediaId> getOrphans(OffsetDateTime threshold, int limit) {
         return this.repository.findOrphans(threshold, PageRequest.ofSize(limit))
                 .getContent().stream()
-                .map(MediaId::existing)
+                .map(MediaId::new)
                 .toList();
     }
 

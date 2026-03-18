@@ -38,11 +38,11 @@ public class MediaTests {
 
         // Assert
         assertThat(result)
-                .containsEntry(MediaId.existing("This will be replaced with existing"), -1)
-                .containsEntry(MediaId.existing("This will be replaced with new"), -1)
-                .containsEntry(MediaId.existing("This will be deleted"), -1)
-                .containsEntry(MediaId.existing("This will be existing one"), 1)
-                .containsEntry(MediaId.existing("This will be added for replacing"), 1)
-                .containsEntry(MediaId.existing("This will be added"), 1);
+                .containsEntry(new MediaId("This will be replaced with existing"), -1)
+                .containsEntry(new MediaId("This will be replaced with new"), -1)
+                .containsEntry(new MediaId("This will be deleted"), -1)
+                .containsEntry(new MediaId("This will be existing one"), 1)
+                .containsEntry(new MediaId("This will be added for replacing"), 1)
+                .containsEntry(new MediaId("This will be added"), 1);
     }
 }

@@ -1,7 +1,6 @@
 package com.uit.tourism_article_management.presentation.exception;
 
-import com.uit.tourism_article_management.domain.exception.DomainErrorCode;
-import com.uit.tourism_article_management.domain.exception.DomainException;
+import com.uit.tourism_article_management.domain.model.DomainException;
 import com.uit.tourism_article_management.presentation.dto.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +22,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse>handleRuntime(RuntimeException exception){
         return ResponseEntity.internalServerError()
                 .body(ApiResponse.builder()
-                        .code(DomainErrorCode.UNCATEGORIZE.getCode())
+                        .code("Unknown")
                         .message(exception.getMessage())
                         .build()
                 );

@@ -33,7 +33,7 @@ public class ArticleContentEdited extends DomainEvent {
 
     @Override
     public String toString() {
-        return String.format("ID: %s | Added blocks: %d | Deleted blocks: %d",
+        return String.format("ID: %s | old blocks: %d | new blocks: %d",
                 articleId.id(),
                 oldContent.size(),
                 newContent.size()

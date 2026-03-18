@@ -13,6 +13,6 @@ public record ArticleId(String id) {
 
     @Override
     public String toString() {
-        return id;
+        return "articleId=" + id;
     }
 }

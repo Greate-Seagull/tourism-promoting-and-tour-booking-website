@@ -1,49 +1,45 @@
 package com.uit.tourism_article_management.domain.model.article;
 
-import com.uit.tourism_article_management.domain.exception.BlankText;
-import com.uit.tourism_article_management.domain.exception.InvalidSequence;
-import com.uit.tourism_article_management.domain.exception.InvalidSize;
-import com.uit.tourism_article_management.domain.exception.MissingField;
 import com.uit.tourism_article_management.domain.model.AggregateRoot;
+import com.uit.tourism_article_management.domain.model.DomainException;
 import com.uit.tourism_article_management.domain.model.media.MediaId;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Article extends AggregateRoot {
     private final ArticleId id;
     private String title;
     private String introduction;
     private MediaId coverImageId;
-    private Set<ArticleBlock> content;
+    private List<ArticleBlock> content;
 
     private Article(ArticleId id) {
         this.id = id;
+        this.content = new ArrayList<>();
     }
 
-    public static Article rehydrate(
+    public Article(
             ArticleId articleId,
             String title,
             String introduction,
             MediaId coverImageId,
-            Set<ArticleBlock> content
+            List<ArticleBlock> content
     ) {
-        Article article = new Article(articleId);
-        article.title = title;
-        article.introduction = introduction;
-        article.coverImageId = coverImageId;
-        article.content = content;
-        return article;
+        this.id = articleId;
+        this.title = title;
+        this.introduction = introduction;
+        this.coverImageId = coverImageId;
+        this.content = content;
     }
 
-    public static Article create(String title, String introduction) {
-        ArticleId articleId = new ArticleId(UUID.randomUUID().toString());
-        Article article = new Article(articleId);
+    public static Article create(String title, String introduction, String media) {
+        Article article = new Article(ArticleId.nextIdentity());
         article.changeTitle(title);
         article.changeIntroduction(introduction);
-        MediaId coverImageId = new MediaId(UUID.randomUUID().toString());
-        article.changeCoverImage(coverImageId);
+        article.changeCoverImage(MediaId.existing(media));
+
+        article.apply(new ArticleCreated(article.id, article.coverImageId));
         return article;
     }
 
@@ -53,45 +49,83 @@ public class Article extends AggregateRoot {
 
     public void changeIntroduction(String introduction) {
         if (introduction == null)
-            throw new MissingField("introduction");
+            throw DomainException.missing("introduction");
         if (introduction.isBlank())
-            throw new BlankText("introduction");
-        if (introduction.length() > 350)
-            throw new InvalidSize("introduction", 1, 350, introduction.length());
+            throw DomainException.blank("introduction");
+        if (introduction.length() > 500)
+            throw DomainException.unfit("introduction", 1, 500, introduction.length());
         this.introduction = introduction;
     }
 
     public void changeTitle(String title) {
         if (title == null)
-            throw new MissingField("title");
+            throw DomainException.missing("title");
         if (title.isBlank())
-            throw new BlankText("title");
+            throw DomainException.blank("title");
         if (title.length() > 60)
-            throw new InvalidSize("title", 1, 60, title.length());
+            throw DomainException.unfit("title", 1, 60, title.length());
         this.title = title;
     }
 
     public void editContent(Collection<ArticleBlock> incomingContent) {
-        this.ensureContentOrder(incomingContent);
+        var duplicated = this.detectDuplicated(incomingContent);
+        if(!duplicated.isEmpty())
+            throw DomainException.duplicated("article block id", duplicated);
+
+        var identified = this.ensureIdentified(incomingContent);
+
         var oldContent = this.getContent();
-        this.content = new HashSet<>(incomingContent);
+        var newContent = new ArrayList<>(identified);
+
+        if (oldContent.equals(newContent))
+            return;
+
+        this.content = newContent;
 
         this.apply(new ArticleContentEdited(
                 this.id,
                 oldContent,
-                this.getContent()
+                newContent
         ));
     }
 
-    private void ensureContentOrder(Collection<ArticleBlock> incomingContent) {
-        Set<Integer> orders = incomingContent.stream()
-                .map(ArticleBlock::order)
+    private Collection<ArticleBlock> ensureIdentified(Collection<ArticleBlock> incomingContent) {
+        var seenIds = incomingContent.stream()
+                .map(ArticleBlock::id)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        for(int i = 1; i <= incomingContent.size(); i++){
-            if(!orders.contains(i))
-                throw new InvalidSequence("ArticleContent", i);
+        var identified = new ArrayList<ArticleBlock>(incomingContent.size());
+        int id = 1;
+        for(var block : incomingContent)
+        {
+            if(block.id() != null){
+                identified.add(block);
+                continue;
+            }
+
+            while(seenIds.contains(Integer.toString(id)))
+                id += 1;
+
+            identified.add(block.identify(Integer.toString(id)));
+            id += 1;
         }
+
+        return identified;
+    }
+
+    private Collection<String> detectDuplicated(Collection<ArticleBlock> incomingContent) {
+        Set<String> seenIds = new HashSet<>();
+        List<String> duplicated = new ArrayList<>();
+        for (var block : incomingContent)
+        {
+            if (block.id() == null)
+                continue;
+            if (!seenIds.add(block.id()))
+                duplicated.add(block.id());
+        }
+
+        return duplicated;
     }
 
     public String getTitle() {
@@ -110,7 +144,7 @@ public class Article extends AggregateRoot {
         return coverImageId;
     }
 
-    public Set<ArticleBlock> getContent() {
-        return Collections.unmodifiableSet(content);
+    public List<ArticleBlock> getContent() {
+        return Collections.unmodifiableList(content);
     }
 }

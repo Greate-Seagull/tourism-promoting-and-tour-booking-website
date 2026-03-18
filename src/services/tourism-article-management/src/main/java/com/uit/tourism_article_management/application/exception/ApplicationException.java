@@ -1,14 +1,26 @@
 package com.uit.tourism_article_management.application.exception;
 
-public class ApplicationException extends RuntimeException {
-    private final int code;
+import com.uit.tourism_article_management.domain.model.DomainError;
+import com.uit.tourism_article_management.domain.model.Errors;
 
-    public ApplicationException(int code, String message) {
+public class ApplicationException extends RuntimeException {
+    private final String code;
+
+    public ApplicationException(String code, String message) {
         super(message);
         this.code = code;
     }
 
-    public int getCode() {
+    public ApplicationException(DomainError error) {
+        super(error.message());
+        this.code = error.code();
+    }
+
+    public static ApplicationException notfound(Object id) {
+        return new ApplicationException(Errors.notfound(id.toString()));
+    }
+
+    public String getCode() {
         return code;
     }
 }

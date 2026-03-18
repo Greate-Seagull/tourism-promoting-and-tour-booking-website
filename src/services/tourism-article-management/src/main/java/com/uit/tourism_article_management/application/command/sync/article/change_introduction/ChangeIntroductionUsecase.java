@@ -1,7 +1,8 @@
 package com.uit.tourism_article_management.application.command.sync.article.change_introduction;
 
+import com.uit.tourism_article_management.application.exception.ApplicationException;
 import com.uit.tourism_article_management.application.port.article.ArticleRepository;
-import com.uit.tourism_article_management.domain.exception.AggregateNotFound;
+import com.uit.tourism_article_management.domain.model.DomainException;
 import com.uit.tourism_article_management.domain.model.article.Article;
 import com.uit.tourism_article_management.domain.model.article.ArticleId;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ public class ChangeIntroductionUsecase {
 
     public void execute(ChangeIntroductionCommand command){
         final ArticleId articleId = new ArticleId(command.articleId());
-        Article article = this.articleRepo.getById(articleId).orElseThrow(() -> new AggregateNotFound("Article", command.articleId()));
+        Article article = this.articleRepo.getById(articleId)
+                .orElseThrow(() -> ApplicationException.notfound(articleId.id()));
         article.changeIntroduction(command.introduction());
         this.articleRepo.save(article);
     }

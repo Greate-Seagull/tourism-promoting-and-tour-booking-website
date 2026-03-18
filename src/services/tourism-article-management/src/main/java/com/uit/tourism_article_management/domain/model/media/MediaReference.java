@@ -1,6 +1,6 @@
 package com.uit.tourism_article_management.domain.model.media;
 
-import com.uit.tourism_article_management.domain.exception.InsufficientResource;
+import com.uit.tourism_article_management.domain.model.DomainException;
 
 import java.time.OffsetDateTime;
 
@@ -35,7 +35,7 @@ public class MediaReference {
 
     public void adjustCount(int value) {
         if(this.count + value < 0)
-            throw new InsufficientResource("reference count", 0, this.count + value);
+            throw DomainException.insufficient("reference count", -value, this.count);
 
         this.count += value;
         this.updatedAt = OffsetDateTime.now();

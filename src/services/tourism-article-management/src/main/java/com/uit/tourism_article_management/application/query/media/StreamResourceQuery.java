@@ -1,7 +1,8 @@
 package com.uit.tourism_article_management.application.query.media;
 
+import com.uit.tourism_article_management.application.exception.ApplicationException;
 import com.uit.tourism_article_management.application.port.media.MediaStore;
-import com.uit.tourism_article_management.domain.exception.AggregateNotFound;
+import com.uit.tourism_article_management.domain.model.DomainException;
 import com.uit.tourism_article_management.domain.model.media.MediaId;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class StreamResourceQuery {
         try{
             this.mediaStore.download(new MediaId(mediaId), response);
         } catch (RuntimeException e) {
-            throw new AggregateNotFound("Media", mediaId);
+            throw ApplicationException.notfound(mediaId);
         }
     }
 }

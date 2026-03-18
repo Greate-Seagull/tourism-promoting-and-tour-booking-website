@@ -1,11 +1,6 @@
 package com.uit.tourism_article_management.domain;
 
 import com.uit.tourism_article_management.domain.model.article.ArticleBlock;
-import com.uit.tourism_article_management.domain.model.article.BlockContent;
-import com.uit.tourism_article_management.domain.model.article.BlockType;
-import com.uit.tourism_article_management.domain.model.media.MediaId;
-
-import java.util.Optional;
 
 public class ArticleBlockBuilder {
     private final String id;
@@ -13,7 +8,6 @@ public class ArticleBlockBuilder {
     private String content = null;
     private String mediaId = null;
     private String style = null;
-    private int order = 1;
 
     public ArticleBlockBuilder(String id) {
         this.id = id;
@@ -63,34 +57,23 @@ public class ArticleBlockBuilder {
         return this;
     }
 
-    public ArticleBlockBuilder withOrder(int order) {
-        this.order = order;
-        return this;
-    }
-
     public ArticleBlock build() {
-        return new ArticleBlock(
+        return ArticleBlock.construct(
                 this.id,
-                new BlockContent(
-                        BlockType.existing(this.type),
-                        this.content,
-                        Optional.ofNullable(MediaId.existing(this.mediaId))
-                ),
-                this.style,
-                this.order
+                this.type,
+                this.content,
+                this.mediaId,
+                this.style
         );
     }
 
     public ArticleBlock buildFixture() {
-        return new ArticleBlock(
+        return ArticleBlock.construct(
                 this.id,
-                new BlockContent(
-                        BlockType.existing(this.type),
-                        this.content == null ? "test context" : this.content,
-                        Optional.ofNullable(MediaId.existing(this.mediaId))
-                ),
-                this.style == null ? "test context" : this.style,
-                this.order
+                this.type,
+                this.content == null ? "test context" : this.content,
+                this.mediaId,
+                this.style == null ? "test context" : this.style
         );
     }
 }

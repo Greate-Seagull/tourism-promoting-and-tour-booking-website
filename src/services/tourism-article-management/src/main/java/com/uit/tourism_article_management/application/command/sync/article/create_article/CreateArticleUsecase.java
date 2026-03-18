@@ -14,9 +14,9 @@ public class CreateArticleUsecase {
     }
 
     @Transactional
-    public CreateArticleResult execute(final CreateArticleCommand command) {
-        final Article article = Article.create(command.title(), command.introduction());
+    public Article execute(final CreateArticleCommand command) {
+        final Article article = Article.create(command.title(), command.introduction(), command.coverImageId());
         this.articleRepo.save(article);
-        return new CreateArticleResult(article.getId().id(), article.getTitle(), article.getCoverImageId().id());
+        return article;
     }
 }

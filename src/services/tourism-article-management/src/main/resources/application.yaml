@@ -2,8 +2,7 @@ spring:
   application:
     name: tourism-article-management
   datasource:
-    url: jdbc:postgresql://localhost:5432/
-    database: tourism_article_management
+    url: jdbc:postgresql://localhost:5432/tourism_article_management
     username: postgres
     password: root
   jpa:
@@ -28,6 +27,18 @@ spring:
     cache-root: D:/server-disk-cache
     disk-ttl-hours: 168 # 1 week
     cleanup-interval-ms: 36000000 # 1 hour
+  ai:
+    ollama:
+#      base-url: http://localhost:11434
+      embedding:
+        options:
+          model: bge-m3
+    vectorstore:
+      pgvector:
+#        dimensions: 1024
+        initialize-schema: true
+        distance-type: COSINE_DISTANCE
+        index-type: HNSW
 
 jwt:
   secret: 4891a5d9adc0636af65e6f88f5302d92e7ba8912cbdf168f73c1bb2a790d3b0b

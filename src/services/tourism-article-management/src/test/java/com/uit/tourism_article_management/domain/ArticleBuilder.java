@@ -38,11 +38,11 @@ public class ArticleBuilder {
     }
 
     public Article build() {
-        return Article.rehydrate(
+        return new Article(
                 ArticleId.nextIdentity(),
                 this.title,
                 this.introduction,
-                MediaId.existing(this.coverImageId),
+                new MediaId(this.coverImageId),
                 new HashSet<>(this.content)
         );
     }

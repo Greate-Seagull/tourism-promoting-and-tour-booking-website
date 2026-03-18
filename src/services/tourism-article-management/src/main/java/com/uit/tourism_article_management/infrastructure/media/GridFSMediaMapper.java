@@ -14,10 +14,10 @@ public class GridFSMediaMapper {
     public Optional<Media> toDomain(GridFSFile file) {
         if(file == null) return Optional.empty();
         return Optional.of(Media.rehydrate(
-                MediaId.existing(file.getObjectId().toHexString()),
+                new MediaId(file.getObjectId().toHexString()),
                 file.getMetadata().get("checksum").toString(),
-                MediaName.existing(file.getFilename()),
-                MediaType.existingType(file.getMetadata().get("media_type").toString()),
+                new MediaName(file.getFilename()),
+                MediaType.rehydrate(file.getMetadata().get("media_type").toString()),
                 file.getUploadDate()
         ));
     }

@@ -1,41 +1,45 @@
 package com.uit.tourism_article_management.domain.model.article;
 
-import com.uit.tourism_article_management.domain.exception.BlankText;
-import com.uit.tourism_article_management.domain.exception.MissingField;
-import com.uit.tourism_article_management.domain.exception.UnsupportedType;
+import com.uit.tourism_article_management.domain.model.DomainException;
+import com.uit.tourism_article_management.domain.model.Errors;
+import com.uit.tourism_article_management.domain.model.Result;
 import com.uit.tourism_article_management.domain.model.media.MediaId;
 
 import java.util.Optional;
 
-public record BlockContent(BlockType type, String content, Optional<MediaId> mediaId) {
-    public BlockContent {
-        if(type.isText())
-            this.requireContent(content);
-        else if(type.isMedia())
-            this.requireMediaReference(mediaId);
+public record BlockContent(BlockType type, String content, MediaId mediaId) {
+    public static BlockContent constructContent(
+            String type,
+            String content,
+            String mediaId
+    ){
+        var detectedType = BlockType.existing(type);
+        if(detectedType.isText())
+            return BlockContent.composeText(detectedType, content);
+        else if(detectedType.isMedia())
+            return BlockContent.attachMedia(detectedType, content, mediaId);
         else
-            throw new UnsupportedType(type.name());
+            throw DomainException.unsupported(type);
     }
 
-    private void requireMediaReference(Optional<MediaId> mediaId) {
-        if(mediaId.isEmpty())
-            throw new MissingField("mediaId");
+    private static BlockContent attachMedia(BlockType type, String content, String mediaId) {
+        var media = MediaId.existing(mediaId);
+        return new BlockContent(type, content, media);
     }
 
-    private void requireContent(String content) {
+    private static BlockContent composeText(BlockType type, String content) {
         if(content == null)
-            throw new MissingField("content");
+            throw DomainException.missing("content");
         if(content.isBlank())
-            throw new BlankText("content");
+            throw DomainException.blank("content");
+        return new BlockContent(type, content, null);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof BlockContent anotherContent) {
-            return this.type.equals(anotherContent.type) &&
-                    this.content.equals(anotherContent.content) &&
-                    this.mediaId.equals(anotherContent.mediaId);
-        }
-        return false;
+    public Optional<MediaId> safeMediaId() {
+        return Optional.ofNullable(this.mediaId);
+    }
+
+    public Optional<String> safeContent() {
+        return Optional.ofNullable(this.content);
     }
 }

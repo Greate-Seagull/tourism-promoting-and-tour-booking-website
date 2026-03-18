@@ -25,7 +25,6 @@ public record ArticleResponse(
                 domain.getCoverImageId().id(),
                 domain.getContent().stream()
                         .map(ArticleBlockResponse::fromDomain)
-                        .sorted(Comparator.comparing(ArticleBlockResponse::order))
                         .toList()
         );
     }

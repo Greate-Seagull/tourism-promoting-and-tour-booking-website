@@ -3,6 +3,7 @@ package com.uit.tourism_article_management.application.command.async.event.media
 import com.uit.tourism_article_management.application.port.media.MediaReferenceRepository;
 import com.uit.tourism_article_management.domain.event.EventHandler;
 import com.uit.tourism_article_management.domain.model.article.ArticleContentEdited;
+import com.uit.tourism_article_management.domain.model.article.ArticleCreated;
 import com.uit.tourism_article_management.domain.model.media.MediaId;
 import com.uit.tourism_article_management.domain.model.media.MediaReference;
 import com.uit.tourism_article_management.domain.model.media.MediaService;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class SyncMediaReference implements EventHandler<ArticleContentEdited> {
+public class SyncMediaReference { //implements EventHandler<ArticleContentEdited>, EventHandler<ArticleCreated> {
     private final MediaService service;
     private final MediaReferenceRepository repo;
 
@@ -24,7 +25,7 @@ public class SyncMediaReference implements EventHandler<ArticleContentEdited> {
         this.repo = repo;
     }
 
-    @Override
+//    @Override
     @EventListener
     public void handle(ArticleContentEdited event) {
         var mediaChanges = this.service.analyzeChanges(event);
@@ -42,5 +43,18 @@ public class SyncMediaReference implements EventHandler<ArticleContentEdited> {
         }
 
         this.repo.saveMany(references);
+    }
+
+//    @Override
+    @EventListener
+    public void handle(ArticleCreated event) {
+        var result = this.repo.getById(event.getCoverImageId());
+        if(result.isEmpty())
+            // Should log before return
+            return;
+
+        var reference = result.get();
+        reference.adjustCount(1);
+        this.repo.save(reference);
     }
 }

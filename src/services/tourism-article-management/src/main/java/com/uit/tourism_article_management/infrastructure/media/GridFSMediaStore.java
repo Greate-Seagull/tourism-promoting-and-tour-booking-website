@@ -68,7 +68,7 @@ public class GridFSMediaStore implements MediaStore {
                 .first();
 
         return Optional.ofNullable(file)
-                .map(f -> MediaId.existing(file.getObjectId().toHexString()));
+                .map(f -> new MediaId(file.getObjectId().toHexString()));
     }
 
     @Override

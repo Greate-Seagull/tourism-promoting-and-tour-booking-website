@@ -1,6 +1,6 @@
 package com.uit.tourism_article_management.domain;
 
-import com.uit.tourism_article_management.domain.exception.DomainException;
+import com.uit.tourism_article_management.domain.model.DomainException;
 import com.uit.tourism_article_management.domain.model.article.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.type;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -20,9 +19,10 @@ public class ArticleTests {
         // Arrange
         final String title = "Create article";
         final String introduction = "Create article";
+        final String coverImageId = "Create article";
 
         // Act
-        final Article article = Article.create(title, introduction);
+        final Article article = Article.create(title, introduction, coverImageId);
 
         // Assert
         assertEquals(title, article.getTitle());
@@ -39,9 +39,10 @@ public class ArticleTests {
     public void Detects_an_invalid_article_title(final String expectedMessage, final String title) {
         // Arrange
         final String introduction = "Create article";
+        final String coverImageId = "Create article";
 
         // Act
-        final Executable act = () -> Article.create(title, introduction);
+        final Executable act = () -> Article.create(title, introduction, coverImageId);
 
         // Assert
         DomainException error = assertThrows(DomainException.class, act);
@@ -58,9 +59,10 @@ public class ArticleTests {
     public void Detects_an_invalid_article_introduction(final String expectedMessage, final String introduction) {
         // Arrange
         final String title = "Create article";
+        final String coverImageId = "Create article";
 
         // Act
-        final Executable act = () -> Article.create(title, introduction);
+        final Executable act = () -> Article.create(title, introduction, coverImageId);
 
         // Assert
         DomainException error = assertThrows(DomainException.class, act);
@@ -98,14 +100,14 @@ public class ArticleTests {
 
     @ParameterizedTest
     @CsvSource({
-            "'ArticleContent is missing order 2', 1, 1", // Duplicate order
-            "'ArticleContent is missing order 1', 2, 2",
-            "'ArticleContent is missing order 1', 3, 3",
-            "'ArticleContent is missing order 1', 2, 3", // Miss preceding order
-            "'ArticleContent is missing order 2', 1, 3",
-            "'ArticleContent is missing order 2', 4, 1",
-            "'ArticleContent is missing order 2', 0, 1", // Doesn't allow not positive order
-            "'ArticleContent is missing order 1', -4, 2"
+            "'article content is missing order 2', 1, 1", // Duplicate order
+            "'article content is missing order 1', 2, 2",
+            "'article content is missing order 1', 3, 3",
+            "'article content is missing order 1', 2, 3", // Miss preceding order
+            "'article content is missing order 2', 1, 3",
+            "'article content is missing order 2', 4, 1",
+            "'article content is missing order 2', 0, 1", // Doesn't allow not positive order
+            "'article content is missing order 1', -4, 2"
     })
     public void Detects_an_invalid_sequence_of_article_content(
             final String expectedMessage,

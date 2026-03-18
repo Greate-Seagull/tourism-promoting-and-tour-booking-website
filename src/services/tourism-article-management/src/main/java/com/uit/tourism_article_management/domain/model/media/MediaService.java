@@ -24,7 +24,7 @@ public class MediaService {
 
     private @NonNull Collection<MediaId> extractMedia(Collection<ArticleBlock> event) {
         return event.stream()
-                .map(block -> block.content().mediaId())
+                .map(block -> block.content().safeMediaId())
                 .flatMap(Optional::stream)
                 .toList();
     }

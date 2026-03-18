@@ -1,7 +1,8 @@
 package com.uit.tourism_article_management.application.query.media;
 
+import com.uit.tourism_article_management.application.exception.ApplicationException;
 import com.uit.tourism_article_management.application.port.media.MediaStore;
-import com.uit.tourism_article_management.domain.exception.AggregateNotFound;
+import com.uit.tourism_article_management.domain.model.DomainException;
 import com.uit.tourism_article_management.domain.model.media.Media;
 import com.uit.tourism_article_management.domain.model.media.MediaId;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,6 @@ public class FetchMetadataQuery {
 
     public Media execute(String id) {
         return this.store.getById(MediaId.existing(id))
-                .orElseThrow(() -> new AggregateNotFound("Media", id));
+                .orElseThrow(() -> ApplicationException.notfound(id));
     }
 }

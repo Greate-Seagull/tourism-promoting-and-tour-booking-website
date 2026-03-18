@@ -40,7 +40,7 @@ public class UploadResourceUsecase {
                         final Media media = new Media(
                                 this.mediaStore.nextIdentity(),
                                 checksum,
-                                MediaType.existingType(command.mimeType())
+                                MediaType.rehydrate(command.mimeType())
                         );
 
                         this.mediaStore.upload(media, buffered);

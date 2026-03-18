@@ -8,9 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -51,16 +49,17 @@ public class JpaArticle {
         this.setCoverImageId(domainImage.id());
     }
 
-    private void applyContent(Set<ArticleBlock> domainContent) {
+    private void applyContent(List<ArticleBlock> domainContent) {
         if(domainContent == null)
             return;
 
         var content = new ArrayList<JpaArticleBlock>();
-        for(var block: domainContent){
-            var jpaBlock = JpaArticleBlock.fromDomain(block);
-            jpaBlock.setArticle(this);
-            content.add(jpaBlock);
+        for (int i = 0; i < domainContent.size(); i++) {
+            var block = JpaArticleBlock.fromDomain(domainContent.get(i), this);
+            block.setBlockOrder(i);
+            content.add(block);
         }
+
         this.setContent(content);
     }
 
@@ -73,14 +72,15 @@ public class JpaArticle {
     public static Article toDomain(JpaArticle jpaArticle) {
         if  (jpaArticle == null) return null;
 
-        return Article.rehydrate(
+        return new Article(
                 new ArticleId(jpaArticle.getArticleId()),
                 jpaArticle.getTitle(),
                 jpaArticle.getIntroduction(),
                 new MediaId(jpaArticle.getCoverImageId()),
                 jpaArticle.getContent().stream()
+                        .sorted(Comparator.comparing(JpaArticleBlock::getBlockOrder))
                         .map(JpaArticleBlock::toDomain)
-                        .collect(Collectors.toSet())
+                        .toList()
         );
     }
 }

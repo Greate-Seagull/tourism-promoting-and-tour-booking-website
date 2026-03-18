@@ -8,23 +8,21 @@ import com.uit.tourism_article_management.domain.model.media.MediaId;
 import java.util.Optional;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "type", "content", "mediaId", "order"})
+@JsonPropertyOrder({"id", "type", "content", "mediaId"})
 public record ArticleBlockResponse(
         String id,
         String type,
         String content,
         String mediaId,
-        String style,
-        int order
+        String style
 ) {
     public static ArticleBlockResponse fromDomain(ArticleBlock articleBlock) {
         return new ArticleBlockResponse(
                 articleBlock.id(),
                 articleBlock.content().type().name(),
                 articleBlock.content().content(),
-                articleBlock.content().mediaId().map(MediaId::id).orElse(null),
-                articleBlock.style(),
-                articleBlock.order()
+                articleBlock.content().safeMediaId().map(MediaId::id).orElse(null),
+                articleBlock.style()
         );
     }
 }

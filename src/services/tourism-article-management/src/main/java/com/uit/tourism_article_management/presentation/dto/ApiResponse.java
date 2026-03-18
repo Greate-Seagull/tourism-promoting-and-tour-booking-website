@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 public class ApiResponse<T>{
     @Builder.Default
-    private int code = 0;
+    private String code = "Success";
     @Builder.Default
     private String message = "success";
     private T result;

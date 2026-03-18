@@ -15,8 +15,8 @@ import java.util.Optional;
 @Getter
 @Setter
 public class JpaArticleBlock {
-    @Id
-    private String articleBlockId;
+    @EmbeddedId
+    private JpaArticleBlockId id;
     private String type;
     private int blockOrder;
     private String mediaId;
@@ -30,33 +30,36 @@ public class JpaArticleBlock {
     private String style;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("articleId")
     @JoinColumn(name = "article_id")
     private JpaArticle article;
 
-    public static JpaArticleBlock fromDomain(ArticleBlock articleBlock) {
+    public static JpaArticleBlock fromDomain(ArticleBlock articleBlock, JpaArticle article) {
         var persist = new JpaArticleBlock();
-        persist.setArticleBlockId(articleBlock.id());
-        persist.setStyle(String.valueOf(articleBlock.style()));
-        persist.setBlockOrder(articleBlock.order());
+        persist.setStyle(articleBlock.style());
 
         var blockContent = articleBlock.content();
         persist.setType(blockContent.type().name());
-        persist.setContent(String.valueOf(blockContent.content()));
-        persist.setMediaId(blockContent.mediaId().map(MediaId::id).orElse(null));
+        persist.setContent(blockContent.content());
+        persist.setMediaId(blockContent.safeMediaId().map(MediaId::id).orElse(null));
+
+        persist.setArticle(article);
+        persist.setId(new JpaArticleBlockId(article.getArticleId(), articleBlock.id()));
         return persist;
     }
 
     public static ArticleBlock toDomain(JpaArticleBlock jpaArticleBlock) {
         if(jpaArticleBlock == null) return null;
         return new ArticleBlock(
-                jpaArticleBlock.getArticleBlockId(),
+                jpaArticleBlock.getId().articleBlockId(),
                 new BlockContent(
-                        BlockType.existing(jpaArticleBlock.getType()),
+                        BlockType.rehydrate(jpaArticleBlock.getType()),
                         jpaArticleBlock.getContent(),
-                        Optional.ofNullable(MediaId.existing(jpaArticleBlock.getMediaId()))
+                        Optional.ofNullable(jpaArticleBlock.getMediaId())
+                                .map(MediaId::new)
+                                .orElse(null)
                 ),
-                jpaArticleBlock.getStyle(),
-                jpaArticleBlock.getBlockOrder()
+                jpaArticleBlock.getStyle()
         );
     }
 }
