@@ -1,0 +1,28 @@
+@startuml
+autonumber
+
+actor "Tourist" as user
+box "Application Server" #LightBlue
+    participant ":AccountController" as controller
+    participant ":OrderQueryHandler" as handler
+    participant ":OrderProjection" as projection
+end box
+
+user -> controller : privateSearch(request)
+activate controller
+
+controller -> handler : privateSearch(privateQuery)
+activate handler
+
+handler -> projection : privateSearch(privateQuery)
+activate projection
+handler <-- projection : List<SummarizedOrder>
+deactivate projection
+
+handler --> controller : List<SummarizedOrder>
+deactivate handler
+
+controller --> user : HTTP 200 + JSON list
+deactivate controller
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":OrderController" as controller
+    participant ":OrderCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":TourRepository" as tourRepo
+    participant ":OrderRepository" as ordRepo
+    participant ":EventPublisher" as publisher
+    participant ":Tourist" as touristAcc
+end box
+
+tourist -> controller : cancel(request)
+activate controller
+
+controller -> handler : cancel(command)
+activate handler
+
+handler -> accRepo : getTouristById(accountId)
+activate accRepo
+handler <-- accRepo : Tourist
+deactivate accRepo
+handler -> tourRepo : getScheduleById(tourId)
+activate tourRepo
+handler <-- tourRepo : TourSchedule
+deactivate tourRepo
+
+handler -> ordRepo : getById(orderId)
+activate ordRepo
+ordRepo --> handler : Order
+deactivate ordRepo
+
+handler -> touristAcc : cancelOrder(tour, order)
+activate touristAcc
+touristAcc -> touristAcc : isDepartureRefundable()
+handler <-- touristAcc : true
+deactivate touristAcc
+
+handler -> ordRepo : cancel(orderId)
+handler -> publisher : publish(orderCancelled)
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

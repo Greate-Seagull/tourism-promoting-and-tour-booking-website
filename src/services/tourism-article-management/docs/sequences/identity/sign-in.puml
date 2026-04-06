@@ -1,0 +1,39 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":AccountController" as controller
+    participant ":AccountCommandHandler" as handler
+    participant ":Account" as activeRecord
+    participant ":EncryptionService" as encrypt
+    participant ":TokenService" as token
+end box
+
+tourist -> controller : signin(request)
+activate controller
+
+controller -> handler : signin(command)
+activate handler
+
+alt phoneNumber is not null
+handler -> activeRecord : getByPhoneNumber(phoneNumber)
+activate activeRecord
+else email is not null
+handler -> activeRecord : getByEmail(email)
+else googbleSub is not null
+handler -> activeRecord : getByGoogleSub(googleSub)
+end
+handler <-- activeRecord : Account
+deactivate activeRecord
+
+handler -> encrypt : isHashedEqual(raw, hashed)
+handler -> token : generate(accountId, role)
+
+deactivate handler
+
+controller --> tourist : HTTP 201 + JSON (Token)
+deactivate controller
+
+@enduml

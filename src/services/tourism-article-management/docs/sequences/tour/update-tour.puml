@@ -1,0 +1,53 @@
+@startuml
+
+autonumber
+
+actor "Tour operator" as tourist
+box "Application Server" #LightBlue
+    participant ":TourController" as controller
+    participant ":TourCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":TourRepository" as tourRepo
+    participant ":TourOperator" as tourOp
+end box
+
+tourist -> controller : refine(request)
+activate controller
+
+controller -> handler : refine(command)
+activate handler
+
+handler -> accRepo : getTourOperatorById(accountId)
+activate accRepo
+handler <-- accRepo : TourOperator
+deactivate accRepo
+handler -> tourRepo : getItineraryById(tourId)
+activate tourRepo
+handler <-- tourRepo : TourItinerary
+deactivate tourRepo
+handler -> tourRepo : getPresentationById(tourId)
+activate tourRepo
+handler <-- tourRepo : TourPresentation
+deactivate tourRepo
+
+handler -> tourOp : refine(request, itinerary, presentation)
+activate tourOp
+tourOp -> tourOp : hasHosted(itinerary)
+tourOp -> tourOp : hasHosted(presentation)
+alt timeline not null or policy not null
+tourOp -> tourOp : hasPublished(itinerary)
+end
+alt image not null
+tourOp -> tourOp : hasImage(presentation)
+end
+handler <-- tourOp : true
+deactivate tourOp
+
+handler -> tourRepo : save(tourId, itinerary, presentation)
+
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

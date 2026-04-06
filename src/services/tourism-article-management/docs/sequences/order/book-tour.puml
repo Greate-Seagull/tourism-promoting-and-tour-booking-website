@@ -1,0 +1,60 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":OrderController" as controller
+    participant ":OrderCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":TourRepository" as tourRepo
+    participant ":PaymentRepository" as payRepo
+    participant ":OrderRepository" as ordRepo
+    participant ":EventPublisher" as publisher
+    participant ":Tourist" as touristAcc
+end box
+
+tourist -> controller : book(request)
+activate controller
+
+controller -> handler : book(command)
+activate handler
+
+handler -> accRepo : getTouristById(accountId)
+activate accRepo
+handler <-- accRepo : Tourist
+deactivate accRepo
+handler -> tourRepo : getScheduleById(tourId)
+activate tourRepo
+handler <-- tourRepo : TourSchedule
+deactivate tourRepo
+handler -> tourRepo : getPriceById(priceTableId)
+activate tourRepo
+handler <-- tourRepo : PriceTable
+deactivate tourRepo
+handler -> payRepo : getById(paymentId)
+activate payRepo
+handler <-- payRepo : Payment
+deactivate payRepo
+
+handler -> touristAcc : bookTour(tour, priceTable, payment, request)
+activate touristAcc
+touristAcc -> touristAcc : !hasHosted(tour)
+touristAcc -> touristAcc : isDepartureBookable(takeOffDate)
+touristAcc -> touristAcc : validateTouristOptions(tourists)
+touristAcc -> touristAcc : calculatePrice(priceTable, tourists)
+touristAcc -> touristAcc : validatePrice(payment, price)
+touristAcc -> touristAcc : apply(TourBooked)
+handler <-- touristAcc : Order
+deactivate touristAcc
+
+handler -> ordRepo : book(order)
+handler -> publisher : publish(events)
+
+controller <-- handler : Order
+deactivate handler
+
+controller --> tourist : HTTP 201 + JSON (CompleteOrder)
+deactivate controller
+
+@enduml

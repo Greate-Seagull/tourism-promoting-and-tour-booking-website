@@ -1,0 +1,23 @@
+@startuml
+
+autonumber
+
+participant ":MessageBus" as messageBus
+box "Application Server" #LightBlue
+    participant ":EventSubscriber" as subscriber
+    participant ":AdminEventHandler" as eventHandler
+    participant ":MailService" as mailer
+end box
+
+messageBus -> subscriber : onMessage(AccountPromoted/AccountDemoted/OrderCancelled)
+activate subscriber
+
+subscriber -> eventHandler : sendEmail(AccountPromoted/AccountDemoted/OrderCancelled)
+activate eventHandler
+
+eventHandler -> mailer : sendEmail(request)
+
+deactivate eventHandler
+deactivate subscriber
+
+@enduml

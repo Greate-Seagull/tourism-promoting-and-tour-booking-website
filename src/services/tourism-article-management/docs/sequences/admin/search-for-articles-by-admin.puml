@@ -1,0 +1,34 @@
+@startuml
+autonumber
+
+actor "Tourist" as user
+box "Application Server" #LightBlue
+    participant ":AdminController" as controller
+    participant ":ArticleQueryHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":ArticleProjection" as projection
+end box
+
+user -> controller : internalSearch(request)
+activate controller
+
+controller -> handler : internalSearch(internalQuery)
+activate handler
+
+handler -> accRepo : getAdminById(accountId)
+activate accRepo
+handler <-- accRepo : Admin
+deactivate accRepo
+
+handler -> projection : internalSearch(internalQuery)
+activate projection
+projection --> handler : List<SummarizedInternalArticle>
+deactivate projection
+
+handler --> controller : List<SummarizedInternalArticle>
+deactivate handler
+
+controller --> user : HTTP 200 + JSON list
+deactivate controller
+
+@enduml

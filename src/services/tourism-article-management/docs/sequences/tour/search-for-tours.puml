@@ -1,0 +1,30 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":TourController" as controller
+    participant ":TourQueryHandler" as queryHandler
+    participant ":TourProjection" as projection
+end box
+
+tourist -> controller : search(request)
+activate controller
+
+controller -> queryHandler : search(query)
+activate queryHandler
+
+queryHandler -> projection : search(query)
+activate projection
+
+projection --> queryHandler : List<SummarizedTour>
+deactivate projection
+
+queryHandler --> controller : List<SummarizedTour>
+deactivate queryHandler
+
+controller --> tourist : HTTP 200 + JSON list
+deactivate controller
+
+@enduml

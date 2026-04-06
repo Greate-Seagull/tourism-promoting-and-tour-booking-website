@@ -1,0 +1,34 @@
+@startuml
+autonumber
+
+actor "Tourist" as user
+box "Application Server" #LightBlue
+    participant ":AdminController" as controller
+    participant ":RoleRequestQueryHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":RoleRequestProjection" as projection
+end box
+
+user -> controller : internalSearch(request)
+activate controller
+
+controller -> handler : internalSearch(internalQuery)
+activate handler
+
+handler -> accRepo : getAdminById(accountId)
+activate accRepo
+handler <-- accRepo : Admin
+deactivate accRepo
+
+handler -> projection : internalSearch(internalQuery)
+activate projection
+projection --> handler : List<CompleteRoleRequest>
+deactivate projection
+
+handler --> controller : List<CompleteRoleRequest>
+deactivate handler
+
+controller --> user : HTTP 200 + JSON list
+deactivate controller
+
+@enduml

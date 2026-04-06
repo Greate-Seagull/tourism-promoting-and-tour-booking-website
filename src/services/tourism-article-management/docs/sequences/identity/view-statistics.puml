@@ -1,0 +1,36 @@
+@startuml
+autonumber
+
+actor "Tourist, Tour operator" as user
+box "Application Server" #LightBlue
+    participant ":AccountController" as controller
+    participant ":MetricsQueryHandler" as handler
+    participant ":Account" as accRecord
+    participant ":MetricsProjection" as projection
+end box
+
+user -> controller : getMetrics(request)
+activate controller
+
+controller -> handler : getMetrics(query)
+activate handler
+
+handler -> accRecord : getById(accountId)
+activate accRecord
+handler <-- accRecord : Account
+deactivate accRecord
+
+handler -> accRecord : hasRole(role)
+
+handler -> projection : getMetrics(query)
+activate projection
+handler <-- projection : Metrics
+deactivate projection
+
+handler --> controller : Metrics
+deactivate handler
+
+controller --> user : HTTP 200 + JSON (Metrics)
+deactivate controller
+
+@enduml

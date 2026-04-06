@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+node "Client" {
+    component "Browser" {
+        component "UI"
+        component "Business processing"
+        component "Server communication"
+        "UI" ..> "Business processing"
+        "Business processing" ..> "Server communication"
+    }
+}
+
+node "Server" {
+    component "Presentation" {
+        component "Controller"
+        "Server communication" ..> "Controller"
+    }
+    component "Application" {
+        component "Service"
+        Controller ..> Service
+    }
+    component "Domain" {
+        component "Model"
+        Service ..> Model
+    }
+    component "Infrastructure" {
+        component "Persistence"
+        Persistence ..> Service
+        Persistence ..> Model
+    }
+}
+
+@enduml

@@ -1,0 +1,47 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":ArticleController" as controller
+    participant ":ArticleCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":TextRefiner" as refiner
+    participant ":Editor" as editor
+    participant ":Article" as activeRecord
+end box
+
+tourist -> controller : enrich(request)
+activate controller
+
+controller -> handler : enrich(command)
+activate handler
+
+handler -> accRepo : getEditorById(accountId)
+activate accRepo
+handler <-- accRepo : Editor
+deactivate accRepo
+
+handler -> activeRecord : getById(articleId)
+activate activeRecord
+handler <-- activeRecord : Article
+deactivate activeRecord
+
+handler -> refiner : extractText(content)
+handler -> refiner : sanitize(content)
+
+handler -> editor : enrichArticle(cleanHtml, bodyText, article)
+activate editor
+editor -> editor : hasOwned(article)
+editor -> activeRecord : enrich(cleanHtml, bodyText)
+handler <-- editor : Article
+deactivate editor
+
+handler -> activeRecord : save()
+deactivate handler
+
+controller --> tourist : HTTP 201 + JSON (ArticleModification)
+deactivate controller
+
+@enduml

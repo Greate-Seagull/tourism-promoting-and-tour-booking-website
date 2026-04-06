@@ -1,0 +1,28 @@
+@startuml
+autonumber
+
+actor "Tourist" as user
+box "Application Server" #LightBlue
+    participant ":MediaController" as controller
+    participant ":MediaCommandHandler" as handler
+    participant ":MediaStore" as projection
+end box
+
+user -> controller : upload(request)
+activate controller
+
+controller -> handler : upload(command)
+activate handler
+
+handler -> projection : upload(command)
+activate projection
+projection --> handler : Checksum
+deactivate projection
+
+handler --> controller : Checksum
+deactivate handler
+
+controller --> user : HTTP 200 + Checksum
+deactivate controller
+
+@enduml

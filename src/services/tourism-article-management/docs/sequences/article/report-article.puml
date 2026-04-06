@@ -1,0 +1,20 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":ArticleController" as controller
+    participant ":Report" as activeRecord
+end box
+
+tourist -> controller : report(request)
+activate controller
+
+controller -> activeRecord ** : create(request)
+controller -> activeRecord : save()
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

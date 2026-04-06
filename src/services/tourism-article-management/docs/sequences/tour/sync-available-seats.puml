@@ -1,0 +1,39 @@
+@startuml
+
+autonumber
+
+participant ":MessageBus" as messageBus
+box "Application Server" #LightBlue
+    participant ":EventSubscriber" as subscriber
+    participant ":TourDepartureEventHandler" as eventHandler
+    participant ":TourDepartureCommandHandler" as commandHandler
+    participant ":TourDepartureRepository" as repository
+    participant ":TourDeparture" as tourDeparture
+end box
+
+messageBus -> subscriber : onMessage(DepartureBooked/OrderCancelled)
+activate subscriber
+
+subscriber -> eventHandler : handle(SeatReservedEvent)
+activate eventHandler
+
+eventHandler -> commandHandler : reserveSeats(command)
+activate commandHandler
+
+commandHandler -> repository : getById(tourDepartureId)
+'activate repository
+'repository --> commandHandler : tourDeparture
+'deactivate repository
+
+commandHandler -> tourDeparture : reserveSeats(numberOfSeats)
+'activate tourDeparture
+'tourDeparture --> commandHandler : success
+'deactivate tourDeparture
+
+commandHandler -> repository : save(tourDeparture)
+deactivate commandHandler
+
+deactivate eventHandler
+deactivate subscriber
+
+@enduml
