@@ -1,0 +1,36 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":AccountController" as controller
+    participant ":AccountCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":TourOperator" as tourOp
+end box
+
+tourist -> controller : submitBankAccount(request)
+activate controller
+
+controller -> handler : submitBankAccount(command)
+activate handler
+
+handler -> accRepo : getTourOperatorById(accountId)
+activate accRepo
+handler <-- accRepo : TourOperator
+deactivate accRepo
+
+handler -> tourOp : submitBankAccount(role)
+activate tourOp
+handler <-- tourOp : BankWallet
+deactivate
+
+handler -> accRepo : submitWallet(accountId, wallet)
+
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

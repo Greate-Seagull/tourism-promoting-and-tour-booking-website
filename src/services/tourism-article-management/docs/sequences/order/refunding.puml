@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+tourist -> frontend: refund()
+frontend -> Controller: refund(orderId)
+Controller -> RefundService: initiateRefund(orderId)   ' Transaction Script
+
+RefundService -> Persistence: loadOrder(orderId)
+RefundService -> RefundService: validateCanRefund(order)   ' business rules
+
+' Idempotency for QA4
+RefundService -> Persistence: createRefundRecord(orderId, idempotencyKey)   ' pending state
+
+RefundService -> PaymentGatewayAdapter: requestRefund(transactionId, idempotencyKey, signature)   ' << Gateway + Limit Access + Encrypt >>
+PaymentGatewayAdapter -> bank: refundRequest(...)
+PaymentGatewayAdapter <-- bank: accepted (or immediate result)
+
+' Mark as processing
+RefundService -> Persistence: updateRefundStatus("processing")
+
+' Bank usually sends async webhook later
+...
+bank -> PaymentGatewayAdapter: refundNotify(transactionId, status, idempotencyKey)   ' << Webhook >>
+PaymentGatewayAdapter -> PaymentGatewayAdapter: validateSignature + checkIdempotencyKey
+PaymentGatewayAdapter -> RefundService: refundResult(status)
+
+alt success
+    RefundService -> Persistence: updateRefundStatus("refunded") + commit
+    RefundService -> Persistence: logAudit("refund completed", orderId, amount)
+    RefundService -> MailingService: sendRefundConfirmation()
+else failure or timeout
+    RefundService -> Persistence: updateRefundStatus("failed")   ' compensating action
+    RefundService -> Persistence: logAudit("refund failed", orderId, reason)
+end
+
+Controller <-- RefundService: success/failure
+frontend <-- Controller: result
+
+@enduml

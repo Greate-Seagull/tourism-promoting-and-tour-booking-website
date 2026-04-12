@@ -8,7 +8,9 @@ node "Server" {
     artifact application
 }
 node "Database"
+node "External Bank Gateways"
 
-"Client" -- "Server": http
-"Server" -- "Database": jdbc
+"Client" -- "Server": HTTPS
+"Server" -- "Database": JDBC
+"Server" -- "External Bank Gateways": HTTPS
 @enduml

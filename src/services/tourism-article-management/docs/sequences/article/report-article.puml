@@ -4,15 +4,34 @@ autonumber
 
 actor "Tourist" as tourist
 box "Application Server" #LightBlue
-    participant ":ArticleController" as controller
-    participant ":Report" as activeRecord
+    participant ":AccountController" as controller
+    participant ":AccountCommandHandler" as handler
+    participant ":Account" as accRecord
+    participant ":Report" as reportRecord
 end box
 
-tourist -> controller : report(request)
+tourist -> controller : apply(request)
 activate controller
 
-controller -> activeRecord ** : create(request)
-controller -> activeRecord : save()
+controller -> handler : apply(command)
+activate handler
+
+handler -> accRecord : getById(accountId)
+activate accRecord
+handler <-- accRecord : Account
+deactivate accRecord
+
+handler -> reportRecord : getByAccountAndArticle(accountId, articleId)
+activate reportRecord
+handler <-- reportRecord : Report
+deactivate reportRecord
+
+handler -> reportRecord : notExist
+
+handler -> reportRecord : create(request)
+handler -> reportRecord : save()
+
+deactivate handler
 
 controller --> tourist : HTTP 204
 deactivate controller

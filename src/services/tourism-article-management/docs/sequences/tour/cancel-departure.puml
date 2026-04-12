@@ -29,10 +29,12 @@ deactivate tourRepo
 handler -> tourOp : cancelDeparture(tour)
 activate tourOp
 tourOp -> tourOp : hasHosted(tour)
+'tourOp -> tourOp : canDepartureCancelled(takeOffDate)
 tourOp -> tourOp : isDateScheduled(takeOffDate)
 tourOp -> tourOp : !isDepartureEnded(takeOffDate)
 tourOp -> tourOp : !isDepartureRegistered(takeOffDate)
-'tourOp -> tourOp : canDepartureCancelled(takeOffDate)
+tourOp -> tourOp : hasPublished(tour)
+tourOp -> tourOp : !hasOneDeparture(tour)
 handler <-- tourOp : true
 deactivate tourOp
 

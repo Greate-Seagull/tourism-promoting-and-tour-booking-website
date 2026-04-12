@@ -11,13 +11,14 @@ box "Application Server" #LightBlue
     participant ":PaymentRepository" as payRepo
     participant ":OrderRepository" as ordRepo
     participant ":EventPublisher" as publisher
+    participant ":EncryptionService" as encrypt
     participant ":Tourist" as touristAcc
 end box
 
-tourist -> controller : book(request)
+tourist -> controller : getQr(request)
 activate controller
 
-controller -> handler : book(command)
+controller -> handler : getQr(command)
 activate handler
 
 handler -> accRepo : getTouristById(accountId)
@@ -28,33 +29,39 @@ handler -> tourRepo : getScheduleById(tourId)
 activate tourRepo
 handler <-- tourRepo : TourSchedule
 deactivate tourRepo
+
+handler -> accRepo : getWallet(tourOperatorId) (from TourSchedule)
+activate accRepo
+handler <-- accRepo : BankWallet
+deactivate accRepo
 handler -> tourRepo : getPriceById(priceTableId)
 activate tourRepo
 handler <-- tourRepo : PriceTable
 deactivate tourRepo
-handler -> payRepo : getById(paymentId)
-activate payRepo
-handler <-- payRepo : Payment
-deactivate payRepo
 
-handler -> touristAcc : bookTour(tour, priceTable, payment, request)
+handler -> touristAcc : reserveTour(tour, priceTable, wallet, request)
 activate touristAcc
-touristAcc -> touristAcc : !hasHosted(tour)
-touristAcc -> touristAcc : isDepartureBookable(takeOffDate)
-touristAcc -> touristAcc : validateTouristOptions(tourists)
+touristAcc -> touristAcc : isValid(representative)
+touristAcc -> touristAcc : isBookable(tour, representative, tourists) (isOwned, isPublished, isOpen, isNotFull)
+touristAcc -> touristAcc : isVerified(wallet)
+
 touristAcc -> touristAcc : calculatePrice(priceTable, tourists)
-touristAcc -> touristAcc : validatePrice(payment, price)
-touristAcc -> touristAcc : apply(TourBooked)
+touristAcc -> touristAcc : createOrder()
 handler <-- touristAcc : Order
 deactivate touristAcc
 
-handler -> ordRepo : book(order)
-handler -> publisher : publish(events)
+handler -> ordRepo : reserve(order)
 
-controller <-- handler : Order
+handler -> encrypt : hashSignature(orderId, amount) (using HMAC-SHA256)
+handler -> payRepo : getQr(bankBin, accountNumber, amount, notifyUrl, orderId, signature, idempotencyKey) (idempotency key created from operationName + orderId)
+activate payRepo
+handler <-- payRepo : qr
+deactivate payRepo
+
+controller <-- handler : qr
 deactivate handler
 
-controller --> tourist : HTTP 201 + JSON (CompleteOrder)
+controller --> tourist : HTTP 201 + qrString
 deactivate controller
 
 @enduml

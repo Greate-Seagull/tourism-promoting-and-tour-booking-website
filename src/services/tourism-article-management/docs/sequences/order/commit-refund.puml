@@ -1,0 +1,44 @@
+@startuml
+
+autonumber
+
+actor "Bank" as user
+box "Application Server" #LightBlue
+    participant ":OrderController" as controller
+    participant ":OrderCommandHandler" as handler
+    participant ":OrderRepository" as ordRepo
+    participant ":EncryptionService" as encrypt
+    participant ":PaymentRepository" as payRepo
+    participant ":EventPublisher" as publisher
+end box
+
+user -> controller : notify(request)
+activate controller
+
+controller --> user : HTTP 204
+
+controller -> handler : refund(command)
+activate handler
+
+handler -> ordRepo : getSnapshotByTransaction(transactionId)
+activate ordRepo
+handler <-- ordRepo : OrderSnapshot
+deactivate ordRepo
+
+handler -> handler : isRefunding(order)
+handler -> encrypt : hashSignature(orderId) (using HMAC-SHA256)
+
+handler -> payRepo : getTransactionById(transactionId)
+activate payRepo
+handler <-- payRepo : Transaction
+deactivate payRepo
+
+handler -> handler : isRefunded(transaction)
+
+handler -> ordRepo : refund(orderId)
+handler -> publisher : publish(OrderRefunded)
+
+deactivate handler
+deactivate controller
+
+@enduml

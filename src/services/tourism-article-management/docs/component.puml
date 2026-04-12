@@ -14,21 +14,28 @@ node "Client" {
 node "Server" {
     component "Presentation" {
         component "Controller"
-        "Server communication" ..> "Controller"
+        component "Webhook"
+        component "IdempotencyFilter"
+        component "GlobalExceptionHandler"
     }
     component "Application" {
-        component "Service"
-        Controller ..> Service
+        component "Handler"
+        component "Port"
     }
     component "Domain" {
-        component "Model"
-        Service ..> Model
     }
     component "Infrastructure" {
         component "Persistence"
-        Persistence ..> Service
-        Persistence ..> Model
+        component "Idempotency"
     }
+
+    "Server communication" ..> Controller
+    Presentation ..> Handler
+    IdempotencyFilter ..> Idempotency
+    Infrastructure ..> Port
+    Infrastructure ..> Domain
+    Handler ..> Port
+    Application ..> Domain
 }
 
 @enduml

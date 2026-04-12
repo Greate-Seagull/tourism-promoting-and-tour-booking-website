@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+tourist -> frontend: getQR
+frontend -> server: getQR(touristOptions)
+server -> database: createOrder(touristOptions) in pending state
+server -> server: calculatePrice(order)
+
+server -> PaymentGatewayAdapter: getQR(price, idempotencyKey)
+PaymentGatewayAdapter -> bank: getQR(price, idempotencyKey)
+PaymentGatewayAdapter <-- bank: QR
+server <-- PaymentGatewayAdapter: QR
+
+frontend <-- server: QR
+tourist <-- frontend: QR
+
+tourist -> bank: pay
+
+server <-- bank: transaction (orderId, signature, transactionId, status, price, idempotencyKey)
+server -> PaymentGatewayAdapter: validateTransaction(transaction)
+server -> database: commit(order)
+
+@enduml
