@@ -6,6 +6,7 @@ import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringPath;
+import com.uit.tourism_article_management.account.presentation.view.RoleRequestQuery;
 import com.uit.tourism_article_management.article.presentation.view.AdminArticleQuery;
 import com.uit.tourism_article_management.article.presentation.view.ArticleQuery;
 import com.uit.tourism_article_management.tour.presentation.view.OperatorTourQuery;
@@ -64,6 +65,10 @@ public class QueryDslPredicateBuilder {
     }
 
     public static Predicate from(OperatorTourQuery query) {
+        return new BooleanBuilder();
+    }
+
+    public static Predicate from(RoleRequestQuery query) {
         return new BooleanBuilder();
     }
 }

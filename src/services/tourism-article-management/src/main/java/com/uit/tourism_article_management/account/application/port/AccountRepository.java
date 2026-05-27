@@ -7,6 +7,7 @@ import com.uit.tourism_article_management.account.domain.Account;
 import com.uit.tourism_article_management.article.domain.Editor;
 import com.uit.tourism_article_management.tour.domain.tour_operator.TourOperator;
 
+import java.lang.ScopedValue;
 import java.util.Optional;
 
 public interface AccountRepository {
@@ -29,4 +30,8 @@ public interface AccountRepository {
     void save(RoleRequest created);
 
     void save(TourOperator bankWallet);
+
+    Optional<Admin> getAdminById(String accountId);
+
+    Optional<RoleRequest> getRoleRequestById(Long requestId);
 }

@@ -14,6 +14,7 @@ public class Account {
     private PhoneNumber phoneNumber;
     private String password;
     private Set<Role> roles = new HashSet<>();
+    private AccountStatus status = AccountStatus.NORMAL;
 
     private Account() {}
     public static Account create(AccountCreation creation, String hashed) {
@@ -66,5 +67,25 @@ public class Account {
 
     private boolean hasRole(Role role) {
         return this.roles.contains(role);
+    }
+
+    public void grant(Role role) {
+        this.roles.add(role);
+    }
+
+    public void banned() {
+        this.status = AccountStatus.BANNED;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void removeRoles(Set<Role> roles) {
+        this.roles.removeAll(roles);
+    }
+
+    public void grantRoles(Set<Role> roles) {
+        this.roles.addAll(roles);
     }
 }
