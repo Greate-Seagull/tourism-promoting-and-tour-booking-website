@@ -29,4 +29,13 @@ public class TourOperator {
             throw new ClientException("You have verified your bank wallet");
         this.wallet.setVerified();
     }
+
+    public void requireVerifiedWallet() {
+        if (!this.hasVerifiedWallet())
+            throw new ClientException("Your wallet must be verified");
+    }
+
+    public BankWallet getWallet() {
+        return this.wallet;
+    }
 }

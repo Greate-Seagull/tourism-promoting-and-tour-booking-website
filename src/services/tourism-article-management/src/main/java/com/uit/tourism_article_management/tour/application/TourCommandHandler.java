@@ -3,9 +3,15 @@ package com.uit.tourism_article_management.tour.application;
 
 import com.uit.tourism_article_management.account.application.port.AccountRepository;
 import com.uit.tourism_article_management.exception.ClientException;
-import com.uit.tourism_article_management.tour.application.port.*;
-import com.uit.tourism_article_management.tour.domain.*;
-import com.uit.tourism_article_management.tour.domain.order.Order;
+import com.uit.tourism_article_management.order.domain.Order;
+import com.uit.tourism_article_management.tour.application.port.DestinationRepository;
+import com.uit.tourism_article_management.tour.application.port.OrderRepository;
+import com.uit.tourism_article_management.tour.application.port.RatingRepository;
+import com.uit.tourism_article_management.tour.application.port.TourRepository;
+import com.uit.tourism_article_management.tour.domain.Destination;
+import com.uit.tourism_article_management.tour.domain.Tour;
+import com.uit.tourism_article_management.tour.domain.TourRecord;
+import com.uit.tourism_article_management.tour.domain.TourSchedule;
 import com.uit.tourism_article_management.tour.domain.price_table.PriceTable;
 import com.uit.tourism_article_management.tour.domain.rating.Rating;
 import com.uit.tourism_article_management.tour.domain.tour_operator.TourOperator;

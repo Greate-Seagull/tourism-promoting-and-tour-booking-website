@@ -4,12 +4,6 @@ public record Maybe<T>(
         T data,
         State state
 ) {
-    public enum State {
-        ABSENT,
-        CLEARED,
-        PRESENT
-    }
-
     public static <T> Maybe<T> absent() {
         return new Maybe<>(null, State.ABSENT);
     }
@@ -24,5 +18,11 @@ public record Maybe<T>(
 
     public boolean isAbsent() {
         return state == State.ABSENT;
+    }
+
+    public enum State {
+        ABSENT,
+        CLEARED,
+        PRESENT
     }
 }

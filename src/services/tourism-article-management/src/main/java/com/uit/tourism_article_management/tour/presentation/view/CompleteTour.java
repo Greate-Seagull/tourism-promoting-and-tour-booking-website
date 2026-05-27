@@ -10,14 +10,14 @@ import java.util.List;
 import java.util.Set;
 
 public record CompleteTour(
-     String id,
-     String title,
-     Description description,
-     Set<String> images,
-     Destination pickUp,
-     Destination dropOff,
-     List<TimelineItem>timeline,
-     TourPolicy policy,
-     Set<LocalDate> schedule
+        String id,
+        String title,
+        Description description,
+        Set<String> images,
+        Destination pickUp,
+        Destination dropOff,
+        List<TimelineItem> timeline,
+        TourPolicy policy,
+        Set<LocalDate> schedule
 ) {
 }

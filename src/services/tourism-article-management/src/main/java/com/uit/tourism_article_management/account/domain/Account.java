@@ -1,6 +1,7 @@
 package com.uit.tourism_article_management.account.domain;
 
 import com.uit.tourism_article_management.account.presentation.view.AccountCreation;
+import com.uit.tourism_article_management.account.presentation.view.RoleRequestCreation;
 import com.uit.tourism_article_management.exception.ClientException;
 
 import java.util.HashSet;
@@ -13,10 +14,12 @@ public class Account {
     private Email email;
     private PhoneNumber phoneNumber;
     private String password;
-    private Set<Role> roles = new HashSet<>();
+    private final Set<Role> roles = new HashSet<>();
     private AccountStatus status = AccountStatus.NORMAL;
 
-    private Account() {}
+    private Account() {
+    }
+
     public static Account create(AccountCreation creation, String hashed) {
         Account account = new Account();
         account.id = UUID.randomUUID().toString();
@@ -27,37 +30,23 @@ public class Account {
         return account;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     private void setPassword(String hashed) {
         if (hashed == null)
             throw new ClientException("Account password must be provided");
         this.password = hashed;
     }
 
-    private void setPhoneNumber(PhoneNumber phoneNumber) {
-        if (phoneNumber == null)
-            throw new ClientException("Account phone number must be provided");
-        this.phoneNumber = phoneNumber;
-    }
-
-    private void setEmail(Email email) {
-        if (email == null)
-            throw new ClientException("Account email must be provided");
-        this.email = email;
-    }
-
-    private void setFullname(String fullname) {
-        if (fullname == null || fullname.isBlank())
-            throw new ClientException("Account fullname must be provided");
-        this.fullname = fullname;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public RoleRequest apply(RoleRequest creation) {
+    public RoleRequest apply(RoleRequestCreation creation) {
         requireNotOwnedRole(creation.role());
-        return creation;
+        RoleRequest roleRequest = new RoleRequest();
+        roleRequest.setIssuer(this.id);
+        roleRequest.setQualifier(creation.role(), creation.profiles());
+        roleRequest.setPending();
+        return roleRequest;
     }
 
     private void requireNotOwnedRole(Role roles) {
@@ -87,5 +76,35 @@ public class Account {
 
     public void grantRoles(Set<Role> roles) {
         this.roles.addAll(roles);
+    }
+
+    public String getFullname() {
+        return this.fullname;
+    }
+
+    private void setFullname(String fullname) {
+        if (fullname == null || fullname.isBlank())
+            throw new ClientException("Account fullname must be provided");
+        this.fullname = fullname;
+    }
+
+    public Email getEmail() {
+        return this.email;
+    }
+
+    private void setEmail(Email email) {
+        if (email == null)
+            throw new ClientException("Account email must be provided");
+        this.email = email;
+    }
+
+    public PhoneNumber getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    private void setPhoneNumber(PhoneNumber phoneNumber) {
+        if (phoneNumber == null)
+            throw new ClientException("Account phone number must be provided");
+        this.phoneNumber = phoneNumber;
     }
 }

@@ -16,7 +16,7 @@ public record TimelineItem(
     }
 
     static private void requireNonBlankDetails(String details) {
-        if(details == null || details.isBlank())
+        if (details == null || details.isBlank())
             throw new ClientException("Timeline details must not be blank");
     }
 

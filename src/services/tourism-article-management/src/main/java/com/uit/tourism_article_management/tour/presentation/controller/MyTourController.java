@@ -25,7 +25,7 @@ public class MyTourController {
     public ResponseEntity rate(
             @PathVariable String tourId,
             @RequestBody RatingCreation request
-    ){
+    ) {
         this.commandHandler.rate(tourId, request, SecurityUtils.getRequiredAccountId());
         return ResponseEntity.noContent().build();
     }

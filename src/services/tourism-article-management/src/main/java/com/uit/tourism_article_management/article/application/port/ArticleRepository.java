@@ -1,7 +1,7 @@
 package com.uit.tourism_article_management.article.application.port;
 
-import com.uit.tourism_article_management.article.domain.Report;
 import com.uit.tourism_article_management.article.domain.Article;
+import com.uit.tourism_article_management.article.domain.Report;
 
 import java.util.Optional;
 

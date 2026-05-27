@@ -19,7 +19,7 @@ public class MyArticleController {
     public ResponseEntity report(
             @PathVariable String articleId,
             @RequestBody ReportCreation creation
-    ){
+    ) {
         this.commandHandler.report(articleId, creation, SecurityUtils.getRequiredAccountId());
         return ResponseEntity.noContent().build();
     }

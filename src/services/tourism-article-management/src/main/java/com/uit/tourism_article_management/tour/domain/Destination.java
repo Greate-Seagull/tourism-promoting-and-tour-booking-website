@@ -7,8 +7,8 @@ public record Destination(
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Destination other) {
-            return this.name.equals(other.name) && this.country.equals(other.country);
+        if (obj instanceof Destination(String name1, String country1)) {
+            return this.name.equals(name1) && this.country.equals(country1);
         }
         return false;
     }

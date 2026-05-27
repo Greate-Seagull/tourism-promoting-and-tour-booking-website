@@ -9,6 +9,7 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.uit.tourism_article_management.account.presentation.view.RoleRequestQuery;
 import com.uit.tourism_article_management.article.presentation.view.AdminArticleQuery;
 import com.uit.tourism_article_management.article.presentation.view.ArticleQuery;
+import com.uit.tourism_article_management.order.presentation.view.OrderQuery;
 import com.uit.tourism_article_management.tour.presentation.view.OperatorTourQuery;
 import com.uit.tourism_article_management.tour.presentation.view.ProductQuery;
 
@@ -69,6 +70,10 @@ public class QueryDslPredicateBuilder {
     }
 
     public static Predicate from(RoleRequestQuery query) {
+        return new BooleanBuilder();
+    }
+
+    public static Predicate from(OrderQuery query, String accountId) {
         return new BooleanBuilder();
     }
 }

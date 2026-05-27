@@ -1,13 +1,12 @@
 package com.uit.tourism_article_management.account.application.port;
 
+import com.uit.tourism_article_management.account.domain.Account;
 import com.uit.tourism_article_management.account.domain.Email;
 import com.uit.tourism_article_management.account.domain.PhoneNumber;
 import com.uit.tourism_article_management.account.domain.RoleRequest;
-import com.uit.tourism_article_management.account.domain.Account;
 import com.uit.tourism_article_management.article.domain.Editor;
 import com.uit.tourism_article_management.tour.domain.tour_operator.TourOperator;
 
-import java.lang.ScopedValue;
 import java.util.Optional;
 
 public interface AccountRepository {

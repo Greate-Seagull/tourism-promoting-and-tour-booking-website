@@ -25,7 +25,12 @@ public class TourRecord {
             throw new ClientException("You do not own this tour");
     }
 
-    protected void requireNotOwnedBy(String accountId) {
+    public void requireNotOwnedBy(TourOperator tourOperator) {
+        if (this.isOwnedBy(tourOperator))
+            throw new ClientException("Tour must not belong to you");
+    }
+
+    public void requireNotOwnedBy(String accountId) {
         if (this.isOwnedBy(accountId))
             throw new ClientException("Tour must not belong to you");
     }
@@ -35,7 +40,7 @@ public class TourRecord {
         return creation;
     }
 
-    protected void requirePublished() {
+    public void requirePublished() {
         if (!this.isPublished())
             throw new ClientException("Tour must be published");
     }
@@ -51,5 +56,9 @@ public class TourRecord {
     protected void requireNotPublished() {
         if (this.isPublished())
             throw new ClientException("Tour must not be published");
+    }
+
+    public String getOwnerId() {
+        return this.accountId;
     }
 }

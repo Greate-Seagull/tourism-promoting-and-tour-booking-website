@@ -13,15 +13,9 @@ public class RoleRequest {
     private List<Profile> profiles;
     private String reason;
     private String adminId;
-    private RoleRequestStatus status;
+    private RoleRequestStatus status = RoleRequestStatus.PENDING;
 
-    public RoleRequest() {
-        requireProvidingProfiles(profiles);
-    }
-
-    static private void requireProvidingProfiles(List<Profile> profiles) {
-        if (profiles == null || profiles.isEmpty())
-            throw new ClientException("Role request profile must be provided");
+    protected RoleRequest() {
     }
 
     public void rejectedBy(Reason message, Admin admin) {
@@ -57,7 +51,32 @@ public class RoleRequest {
         return this.issuerId;
     }
 
+    public void setIssuer(@NonNull String id) {
+        this.issuerId = id;
+    }
+
     public Role getRole() {
         return this.role;
+    }
+
+    private void setRole(Role role) {
+        if (role == null)
+            throw new ClientException("Role must be provided");
+        this.role = role;
+    }
+
+    public void setQualifier(Role role, List<Profile> profiles) {
+        this.setRole(role);
+        this.setProfiles(profiles);
+    }
+
+    private void setProfiles(List<Profile> profiles) {
+        if (profiles == null || profiles.isEmpty())
+            throw new ClientException("Profiles must be provided");
+        this.profiles = profiles;
+    }
+
+    public void setPending() {
+        this.status = RoleRequestStatus.PENDING;
     }
 }

@@ -1,7 +1,10 @@
 package com.uit.tourism_article_management.tour.domain.departure;
 
 import com.uit.tourism_article_management.exception.ClientException;
+import com.uit.tourism_article_management.order.domain.Tourist;
+import com.uit.tourism_article_management.tour.domain.TourSchedule;
 import com.uit.tourism_article_management.tour.domain.price_table.PriceTable;
+import org.jspecify.annotations.NonNull;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,14 +35,6 @@ public class AvailableDeparture {
 
     public boolean isTookOffAt(List<LocalDate> takeOffDates) {
         return takeOffDates.contains(this.takeOffDate);
-    }
-
-    public void setTakeOffDate(LocalDate takeOffDate) {
-        if (takeOffDate == null)
-            throw new ClientException("Departure take off date must be provided");
-        if (takeOffDate.isBefore(LocalDate.now()))
-            throw new ClientException("Departure take off date must be in the future");
-        this.takeOffDate = takeOffDate;
     }
 
     public boolean isTookOffAt(LocalDate takeOffDate) {
@@ -106,7 +101,42 @@ public class AvailableDeparture {
         return this.takeOffDate;
     }
 
+    public void setTakeOffDate(LocalDate takeOffDate) {
+        if (takeOffDate == null)
+            throw new ClientException("Departure take off date must be provided");
+        if (takeOffDate.isBefore(LocalDate.now()))
+            throw new ClientException("Departure take off date must be in the future");
+        this.takeOffDate = takeOffDate;
+    }
+
     public boolean isUsingPrice(String name) {
         return this.price.hasName(name);
+    }
+
+    public boolean hasStarted() {
+        return this.takeOffDate.isBefore(LocalDate.now());
+    }
+
+    public void requireOpenForRegistration() {
+        if (this.hasStarted())
+            throw new ClientException(String.format("Tour scheduled on %s has started", takeOffDate.format(TourSchedule.FORMATTER)));
+    }
+
+    public void requireEnoughSeats(List<Tourist> tourists) {
+        int registeredSeat = Math.toIntExact(tourists.stream()
+                .filter(this.seatPolicy::countAsSeat)
+                .count());
+        if (!this.seatPolicy.isEnough(this.reservedSeats + registeredSeat))
+            throw new ClientException(String.format("Tour scheduled on %s has not enough seats", takeOffDate.format(TourSchedule.FORMATTER)));
+
+    }
+
+    public long computePrice(@NonNull List<Tourist> tourists) {
+        return this.price.computePrice(tourists);
+    }
+
+    public void requireRefundable() {
+        if (this.hasStarted())
+            throw new ClientException(String.format("Tour scheduled on %s has started", takeOffDate.format(TourSchedule.FORMATTER)));
     }
 }

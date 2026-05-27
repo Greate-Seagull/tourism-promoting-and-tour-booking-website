@@ -19,7 +19,9 @@ public class Article {
     private String cleanHtml;
     private String bodyText;
 
-    private Article() {}
+    private Article() {
+    }
+
     public static Article create(ArticleCreation creation, Editor editor) {
         Article article = new Article();
         article.id = UUID.randomUUID().toString();

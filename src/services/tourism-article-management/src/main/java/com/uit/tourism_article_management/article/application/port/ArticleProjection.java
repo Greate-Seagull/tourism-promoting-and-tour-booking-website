@@ -1,8 +1,8 @@
 package com.uit.tourism_article_management.article.application.port;
 
-import com.uit.tourism_article_management.article.presentation.view.SummarizedArticle;
-import com.uit.tourism_article_management.article.presentation.view.CompleteReport;
 import com.uit.tourism_article_management.article.presentation.view.CompleteArticle;
+import com.uit.tourism_article_management.article.presentation.view.CompleteReport;
+import com.uit.tourism_article_management.article.presentation.view.SummarizedArticle;
 
 import java.util.List;
 

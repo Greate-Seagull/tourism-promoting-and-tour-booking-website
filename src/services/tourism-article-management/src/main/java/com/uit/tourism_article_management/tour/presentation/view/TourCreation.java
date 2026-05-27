@@ -1,7 +1,7 @@
 package com.uit.tourism_article_management.tour.presentation.view;
 
-import com.uit.tourism_article_management.tour.domain.TourPolicy;
 import com.uit.tourism_article_management.tour.domain.TimelineItem;
+import com.uit.tourism_article_management.tour.domain.TourPolicy;
 
 import java.util.List;
 import java.util.Set;

@@ -7,11 +7,19 @@ public class ArticleModification {
     private Maybe<String> introduction = Maybe.absent();
     private Maybe<String> coverImage = Maybe.absent();
 
+    public Maybe<String> getTitle() {
+        return this.title;
+    }
+
     public void setTitle(String title) {
         if (title == null)
             this.title = Maybe.cleared();
         else
             this.title = Maybe.of(title);
+    }
+
+    public Maybe<String> getIntroduction() {
+        return this.introduction;
     }
 
     public void setIntroduction(String introduction) {
@@ -21,22 +29,14 @@ public class ArticleModification {
             this.introduction = Maybe.of(introduction);
     }
 
+    public Maybe<String> getCoverImage() {
+        return this.coverImage;
+    }
+
     public void setCoverImage(String coverImage) {
         if (coverImage == null)
             this.coverImage = Maybe.cleared();
         else
             this.coverImage = Maybe.of(coverImage);
-    }
-    
-    public Maybe<String> getTitle() {
-        return this.title;
-    }
-    
-    public Maybe<String> getIntroduction() {
-        return this.introduction;
-    }
-    
-    public Maybe<String> getCoverImage() {
-        return this.coverImage;
     }
 }

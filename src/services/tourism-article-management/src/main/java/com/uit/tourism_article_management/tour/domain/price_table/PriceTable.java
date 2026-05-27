@@ -1,6 +1,8 @@
 package com.uit.tourism_article_management.tour.domain.price_table;
 
 import com.uit.tourism_article_management.exception.ClientException;
+import com.uit.tourism_article_management.order.domain.Tourist;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
@@ -19,7 +21,7 @@ public record PriceTable(
     static private void requireNonDuplicatedAges(List<AgeGroupPrice> agePrices) {
         List<String> errors = new ArrayList<>();
         Set<String> seen = new HashSet<>();
-        for (var group: agePrices) {
+        for (var group : agePrices) {
             if (!seen.add(group.name()))
                 errors.add(String.format("Group price %s has duplicated name", group.name()));
         }
@@ -30,7 +32,7 @@ public record PriceTable(
     static private void requireNonOverlappingAges(List<AgeGroupPrice> agePrices) {
         AgeGroupPrice previous = null;
         List<String> errors = new ArrayList<>();
-        for(var current: agePrices.stream().sorted(Comparator.comparing(AgeGroupPrice::from)).toList()) {
+        for (var current : agePrices.stream().sorted(Comparator.comparing(AgeGroupPrice::from)).toList()) {
             if (previous != null && current.from() <= previous.to()) {
                 errors.add(String.format("Group price %s has overlapped with %s", current.name(), previous.name()));
             }
@@ -52,5 +54,18 @@ public record PriceTable(
 
     public boolean hasName(String name) {
         return this.name.equals(name);
+    }
+
+    public long computePrice(@NonNull List<Tourist> tourists) {
+        long price = 0;
+        for (var tourist : tourists) {
+            for (var agePrice : agePrices) {
+                if (agePrice.isSatisfiedBy(tourist.getAge()))
+                    price += agePrice.getPrice();
+            }
+            if (tourist.wantSingleRoom())
+                price += singleRoomPrice;
+        }
+        return price;
     }
 }

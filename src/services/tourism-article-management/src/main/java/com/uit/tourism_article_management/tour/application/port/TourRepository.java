@@ -1,9 +1,9 @@
 package com.uit.tourism_article_management.tour.application.port;
 
+import com.uit.tourism_article_management.tour.domain.Tour;
 import com.uit.tourism_article_management.tour.domain.TourRecord;
 import com.uit.tourism_article_management.tour.domain.TourSchedule;
 import com.uit.tourism_article_management.tour.domain.price_table.PriceTable;
-import com.uit.tourism_article_management.tour.domain.Tour;
 
 import java.util.Optional;
 

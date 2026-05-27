@@ -2,11 +2,7 @@ package com.uit.tourism_article_management.account.application;
 
 import com.uit.tourism_article_management.account.application.port.*;
 import com.uit.tourism_article_management.account.domain.*;
-import com.uit.tourism_article_management.account.presentation.view.AccountRoleModification;
-import com.uit.tourism_article_management.account.presentation.view.Reason;
-import com.uit.tourism_article_management.account.presentation.view.AccountCreation;
-import com.uit.tourism_article_management.account.presentation.view.AccountSigning;
-import com.uit.tourism_article_management.account.presentation.view.BankWalletSubmission;
+import com.uit.tourism_article_management.account.presentation.view.*;
 import com.uit.tourism_article_management.exception.ClientException;
 import com.uit.tourism_article_management.tour.domain.tour_operator.TourOperator;
 import org.jspecify.annotations.NonNull;
@@ -30,7 +26,7 @@ public class AccountCommandHandler {
         boolean emailOrPhoneExists = this.accountRepository.existsByPhoneOrEmail(creation.phoneNumber(), creation.email());
         if (emailOrPhoneExists)
             throw new ClientException("Phone number or email has been registered");
-        String hashed = this.cryptoService.hash(creation.password());
+        String hashed = this.cryptoService.hashPassword(creation.password());
         Account account = Account.create(creation, hashed);
         this.accountRepository.save(account);
         return this.tokenService.generate(account);
@@ -38,7 +34,7 @@ public class AccountCommandHandler {
 
     public String signIn(AccountSigning signing) {
         Account account = requireAccount(signing);
-        if (!this.cryptoService.compare(account.getPassword()))
+        if (!this.cryptoService.comparePassword(account.getPassword()))
             throw new ClientException("Phone number or email or password is invalid");
         return this.tokenService.generate(account);
     }
@@ -47,16 +43,14 @@ public class AccountCommandHandler {
         if (PhoneNumber.isValid(signing.phoneOrEmail())) {
             return this.accountRepository.getByPhoneNumber(signing.phoneOrEmail())
                     .orElseThrow(() -> new ClientException("Phone number or email or password is invalid"));
-        }
-        else if (Email.isValid(signing.phoneOrEmail())) {
+        } else if (Email.isValid(signing.phoneOrEmail())) {
             return this.accountRepository.getByEmail(signing.phoneOrEmail())
                     .orElseThrow(() -> new ClientException("Phone number or email or password is invalid"));
-        }
-        else
+        } else
             throw new ClientException("Phone number or email or password is invalid");
     }
 
-    public void apply(RoleRequest creation, String accountId) {
+    public void apply(RoleRequestCreation creation, String accountId) {
         Account account = getAccount(accountId);
         RoleRequest created = account.apply(creation);
         this.accountRepository.save(created);

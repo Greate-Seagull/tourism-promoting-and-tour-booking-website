@@ -6,7 +6,9 @@ import com.uit.tourism_article_management.tour.presentation.view.TourCreation;
 import com.uit.tourism_article_management.tour.presentation.view.TourModification;
 import org.jspecify.annotations.Nullable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class Tour extends TourRecord {
     private String id;
@@ -19,7 +21,8 @@ public class Tour extends TourRecord {
     private String accountId;
     private Description description;
 
-    private Tour() {}
+    private Tour() {
+    }
 
     public static Tour host(TourCreation request, Destination pickUp, Destination dropOff, TourOperator tourOperator) {
         Tour tour = new Tour();

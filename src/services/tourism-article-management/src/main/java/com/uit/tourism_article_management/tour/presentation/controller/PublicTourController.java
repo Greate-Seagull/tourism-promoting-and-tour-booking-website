@@ -1,12 +1,12 @@
 package com.uit.tourism_article_management.tour.presentation.controller;
 
+import com.uit.tourism_article_management.tour.application.port.TourProjection;
+import com.uit.tourism_article_management.tour.infrastructure.persistence.JpaTourRepository;
 import com.uit.tourism_article_management.tour.presentation.view.CompleteDeparture;
 import com.uit.tourism_article_management.tour.presentation.view.CompleteRating;
 import com.uit.tourism_article_management.tour.presentation.view.CompleteTour;
 import com.uit.tourism_article_management.tour.presentation.view.ProductQuery;
 import com.uit.tourism_article_management.utils.QueryDslPredicateBuilder;
-import com.uit.tourism_article_management.tour.application.port.TourProjection;
-import com.uit.tourism_article_management.tour.infrastructure.persistence.JpaTourRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

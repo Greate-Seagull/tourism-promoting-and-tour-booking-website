@@ -1,11 +1,11 @@
 package com.uit.tourism_article_management.tour.presentation.controller;
 
+import com.uit.tourism_article_management.order.domain.Tourist;
 import com.uit.tourism_article_management.security.SecurityUtils;
 import com.uit.tourism_article_management.tour.application.TourCommandHandler;
 import com.uit.tourism_article_management.tour.application.port.TourProjection;
-import com.uit.tourism_article_management.tour.domain.price_table.PriceTable;
 import com.uit.tourism_article_management.tour.domain.Tour;
-import com.uit.tourism_article_management.tour.domain.order.Tourist;
+import com.uit.tourism_article_management.tour.domain.price_table.PriceTable;
 import com.uit.tourism_article_management.tour.infrastructure.persistence.JpaTourRepository;
 import com.uit.tourism_article_management.tour.infrastructure.utils.MapstructTourMapper;
 import com.uit.tourism_article_management.tour.presentation.view.*;

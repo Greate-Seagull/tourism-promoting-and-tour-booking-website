@@ -6,5 +6,6 @@ import com.uit.tourism_article_management.article.presentation.view.CompleteArti
 
 public interface MapstructArticleMapper {
     CompleteArticle toComplete(Article article);
+
     ArticleModifiable toModifiable(Article article);
 }

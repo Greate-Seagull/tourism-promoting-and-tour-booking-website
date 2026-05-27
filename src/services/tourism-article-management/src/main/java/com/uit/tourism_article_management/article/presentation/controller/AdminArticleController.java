@@ -25,7 +25,7 @@ public class AdminArticleController {
 
     @GetMapping("/{articleId}/reports")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity getReports(@PathVariable String articleId){
+    public ResponseEntity getReports(@PathVariable String articleId) {
         List<CompleteReport> reports = projection.findReportsOfArticle(articleId);
         return ResponseEntity.ok(reports);
     }
@@ -35,7 +35,7 @@ public class AdminArticleController {
     public ResponseEntity searchForArticles(
             @ModelAttribute AdminArticleQuery query,
             Pageable pageable
-    ){
+    ) {
         return ResponseEntity.ok(
                 this.repository.findAll(QueryDslPredicateBuilder.from(query), pageable)
         );

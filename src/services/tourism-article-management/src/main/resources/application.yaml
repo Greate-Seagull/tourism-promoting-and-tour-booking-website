@@ -10,7 +10,7 @@ spring:
     properties:
       hibernate:
         type:
-          json_format_mapper: com.uit.tourism_article_management.infrastructure.config.Jackson3FormatMapper
+          json_format_mapper: com.uit.tourism_article_management.media.infrastructure.Jackson3FormatMapper
   data:
     mongo:
       uri: mongodb://localhost:27017

@@ -1,7 +1,7 @@
 package com.uit.tourism_article_management.account.presentation.controller;
 
-import com.uit.tourism_article_management.account.domain.RoleRequest;
 import com.uit.tourism_article_management.account.application.AccountCommandHandler;
+import com.uit.tourism_article_management.account.presentation.view.RoleRequestCreation;
 import com.uit.tourism_article_management.security.SecurityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class MyAccountController {
     }
 
     @PostMapping("/role-requests")
-    public ResponseEntity apply(@RequestBody RoleRequest creation) {
+    public ResponseEntity apply(@RequestBody RoleRequestCreation creation) {
         this.commandHandler.apply(creation, SecurityUtils.getRequiredAccountId());
         return ResponseEntity.noContent().build();
     }

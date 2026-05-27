@@ -6,4 +6,11 @@ public record AgeGroupPrice(
         int to,
         int price
 ) {
+    public boolean isSatisfiedBy(int age) {
+        return from <= age && age <= to;
+    }
+
+    public long getPrice() {
+        return price;
+    }
 }
