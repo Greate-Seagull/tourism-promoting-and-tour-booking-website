@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+|User|
+start
+:(1) Ask to work with articles (create, edit, or delete);
+|System|
+:(2) Return the appropriate article or list;
+|User|
+repeat :(3) Perform the requested operation;
+|System|
+backward :(4a1) Inform specific errors;
+repeat while ((4) Validate and apply the change) is (fails)
+
+stop
+
+@enduml

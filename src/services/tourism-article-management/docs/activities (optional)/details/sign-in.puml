@@ -1,0 +1,17 @@
+@startuml
+
+|Registered user|
+start
+repeat :(1) Provide credentials;
+
+|System|
+backward :(2a1) Inform about the situation;
+repeat while ((2) Validate credentials and account status) is (fails)
+:(3) Authenticate user;
+
+|Registered user|
+:(4) Access the main site;
+
+stop
+
+@enduml

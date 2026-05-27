@@ -1,0 +1,76 @@
+openapi: 3.0.1
+info:
+  title: Media
+  description: Example workspace
+  version: 1.0.0
+paths:
+  /media/{checksum}:
+    get:
+      summary: Download media
+      parameters:
+        - name: checksum
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+          content:
+            application/octet-stream:
+              schema:
+                type: object
+                title: DownloadMediaOk
+                properties: {}
+          headers: {}
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /media:
+    post:
+      summary: Upload media
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        '201':
+          description: 
+          content:
+            text/plain:
+              schema:
+                type: string
+                title: UploadMediaCreated
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+components:
+  schemas: {}
+  responses:
+    default:
+      description:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message

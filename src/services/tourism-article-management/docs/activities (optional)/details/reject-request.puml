@@ -1,0 +1,15 @@
+@startuml
+
+|Admin|
+start
+:(1) Provide the reason of rejection;
+
+|System|
+:(2) Save the request status;
+:(3) Inform the admin and the candidate about the successful change;
+
+|Admin|
+:(4) Review the result;
+stop
+
+@enduml

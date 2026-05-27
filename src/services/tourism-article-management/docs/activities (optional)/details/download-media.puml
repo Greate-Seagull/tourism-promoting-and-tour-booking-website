@@ -1,0 +1,15 @@
+@startuml
+
+|User|
+start
+:(1) Scroll into media;
+
+|System|
+:(2) Return the media;
+
+|User|
+:(3) Review the result;
+
+stop
+
+@enduml

@@ -1,7 +1,7 @@
 @startuml
 autonumber
 
-actor "Tourist, Tour operator" as user
+actor "Specialist" as user
 box "Application Server" #LightBlue
     participant ":AccountController" as controller
     participant ":MetricsQueryHandler" as handler

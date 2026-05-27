@@ -1,0 +1,25 @@
+@startuml
+
+|Tour operator|
+start
+repeat :(1) Provide bank BIN and account number;
+|System|
+:(2) Request the account's name;
+|Bank gateway|
+if ((3) Is the account valid?) is (yes) then
+:(3a1) Return the account name;
+else (no)
+:(3b1) Return the error;
+endif
+|System|
+backward :(4a1) Inform about the mistake;
+repeat while ((4) Validate the result) is (fails)
+:(5) Save the tour operator wallet in verifying;
+:(6) Return the name;
+
+|Tour operator|
+:(7) Review the result;
+
+stop
+
+@enduml

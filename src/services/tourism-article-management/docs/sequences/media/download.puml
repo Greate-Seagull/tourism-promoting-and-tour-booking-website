@@ -1,7 +1,7 @@
 @startuml
 autonumber
 
-actor "Tourist" as user
+actor "User" as user
 box "Application Server" #LightBlue
     participant ":MediaController" as controller
     participant ":MediaQueryHandler" as handler

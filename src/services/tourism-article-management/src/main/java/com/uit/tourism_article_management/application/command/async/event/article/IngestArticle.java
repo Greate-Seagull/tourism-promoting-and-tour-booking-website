@@ -6,6 +6,8 @@ import com.uit.tourism_article_management.domain.model.article.ArticleContentEdi
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 public class IngestArticle implements EventHandler<ArticleContentEdited> {
     private final ArticleRecommender recommender;
@@ -17,6 +19,7 @@ public class IngestArticle implements EventHandler<ArticleContentEdited> {
     @Override
     @EventListener
     public void handle(ArticleContentEdited event) {
+        event.getOldContent().stream().collect(Collectors.joining());
         this.recommender.ingest(event.getArticleId(), event.getOldContent(), event.getNewContent());
     }
 }

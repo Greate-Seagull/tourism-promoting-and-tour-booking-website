@@ -1,0 +1,20 @@
+@startuml
+
+|General user|
+start
+:(1) Select the desired role and supplies qualifying information;
+|System|
+:(2) Save the request;
+|Admin|
+:(3) Ask for current role requests;
+|System|
+:(4) Return role requests;
+|Admin|
+:(5) Approve or reject a role request;
+|System|
+:(6) Process the decision;
+:(7) Notify the user of the result;
+
+stop
+
+@enduml

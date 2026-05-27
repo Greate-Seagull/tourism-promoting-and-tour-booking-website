@@ -1,0 +1,18 @@
+@startuml
+
+|Tour operator|
+start
+repeat :(1) Provide allowed information for tour;
+
+|System|
+backward :(2a1) Inform about the mistake or the status;
+repeat while ((2) Validate the provided information and the tour status) is (fails)
+:(3) Save the tour;
+:(4) Return the updated tour;
+
+|Tour operator|
+:(5) Review the result;
+
+stop
+
+@enduml

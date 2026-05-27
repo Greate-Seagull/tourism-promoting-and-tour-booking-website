@@ -1,0 +1,18 @@
+@startuml
+
+|Tour operator|
+start
+repeat :(1) Agree with cancellation;
+
+|System|
+backward :(2a1) Inform about the status;
+repeat while ((2) Validate the tour status) is (fails)
+:(3) Remove the departure;
+:(4) Return the departures list;
+
+|Tour operator|
+:(5) Review the result;
+
+stop
+
+@enduml

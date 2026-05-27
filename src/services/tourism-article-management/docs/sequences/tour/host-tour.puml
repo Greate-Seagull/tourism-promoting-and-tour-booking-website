@@ -35,7 +35,7 @@ handler -> tourRepo : save(tourId, itinerary, presentation)
 
 deactivate handler
 
-controller --> tourist : HTTP 201 + JSON TourCreation
+controller --> tourist : HTTP 201 + JSON CompleteTour
 deactivate controller
 
 @enduml

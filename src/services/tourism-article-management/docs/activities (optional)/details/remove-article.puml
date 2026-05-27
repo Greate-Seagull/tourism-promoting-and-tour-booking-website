@@ -1,0 +1,16 @@
+@startuml
+
+|Editor|
+start
+:(1) Agree with the removal;
+
+|System|
+:(2) Remove the article from database;
+:(3) Inform the editor about the success;
+
+|Editor|
+:(4) Review the result;
+
+stop
+
+@enduml

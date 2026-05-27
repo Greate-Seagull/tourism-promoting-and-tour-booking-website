@@ -1,0 +1,16 @@
+@startuml
+
+|General user|
+start
+repeat :(1) Select the desired role and supplies qualifying information;
+|System|
+backward :(2a1) Inform the current status;
+repeat while ((2) Validate the account status) is (fails)
+:(3) Save the created role request;
+:(4) Return the request;
+|General user|
+:(5) Review the result;
+
+stop
+
+@enduml

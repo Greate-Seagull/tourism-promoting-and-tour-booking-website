@@ -1,0 +1,17 @@
+@startuml
+
+|Tour operator|
+start
+repeat :(1) Provide title, introduction, policy and timeline;
+
+|System|
+backward :(2a1) Inform about the mistake;
+repeat while ((2) Validate the information) is (fails)
+:(3) Save the created tour;
+
+|Tour operator|
+:(4) Review the result;
+
+stop
+
+@enduml

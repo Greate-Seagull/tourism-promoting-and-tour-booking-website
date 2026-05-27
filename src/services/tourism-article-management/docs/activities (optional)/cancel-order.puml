@@ -1,0 +1,23 @@
+@startuml
+
+|User|
+start
+:(1) Ask to see his active bookings;
+|System|
+:(2) Return the list of qualifying bookings;
+|User|
+repeat :(3) Select one booking for refund;
+|System|
+:(4) Present refund details and policy;
+|User|
+:(5) Confirm cancellation;
+|System|
+Backward :(4a2) Explain reason and offers alternatives;
+repeat while ((6) Is order refundable?) is (no)
+->yes;
+:(6a1) Process the refund and cancels the order;
+:(6a2) Deliver confirmation to Tourist;
+
+
+stop
+@enduml

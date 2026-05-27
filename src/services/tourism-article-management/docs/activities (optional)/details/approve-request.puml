@@ -1,0 +1,16 @@
+@startuml
+
+|Admin|
+start
+:(1) Provide the reason of approval;
+
+|System|
+:(2) Grant requested roles to the candidate;
+:(3) Save the request status and candidate's account status;
+:(4) Inform the admin and the candidate about the successful change;
+
+|Admin|
+:(5) Review the result;
+stop
+
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+
+|Tour operator|
+start
+:(1) Agree to verify;
+
+|System|
+:(2) Save the bank account status;
+:(3) Update the view;
+
+|Tour operator|
+:(4) Review the result;
+
+stop
+
+@enduml

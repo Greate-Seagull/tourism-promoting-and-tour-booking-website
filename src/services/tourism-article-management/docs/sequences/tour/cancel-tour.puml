@@ -11,10 +11,10 @@ box "Application Server" #LightBlue
     participant ":TourOperator" as tourOp
 end box
 
-tourist -> controller : publish(request)
+tourist -> controller : cancel(request)
 activate controller
 
-controller -> handler : publish(command)
+controller -> handler : cancel(command)
 activate handler
 
 handler -> accRepo : getTourOperatorById(accountId)

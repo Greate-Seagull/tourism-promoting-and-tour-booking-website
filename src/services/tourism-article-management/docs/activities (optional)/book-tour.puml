@@ -1,0 +1,40 @@
+@startuml
+title Activity Diagram: Book Tour
+
+|User|
+start
+:(1) Ask for tours matching criteria;
+
+|System|
+:(2) Offer several tours matching the request;
+
+|User|
+repeat :(3) Select a tour;
+
+|System|
+backward :(4b1) Inform Tourist and suggest similar tours;
+repeat while ((4) Tour exists?) is (no)
+->yes;
+:(4a1) Deliver full tour details;
+if ((5) Offer using existing account) is (no) then
+
+|User|
+repeat :(5a1) Choose schedule, provide contact info,\nand room options;
+|System|
+backward :(5a3) Inform tourist to refill;
+repeat while ((5a2) Validate tourist contact and related information) is (fails)
+
+else (yes)
+|User|
+:(5b1) log in account;
+|System|
+:(5b2) Accept the registered info without validating contact information;
+endif
+
+|User|
+:(6) Submit payment;
+|System|
+:(7) Confirm the booking and delivers order details;
+
+stop
+@enduml

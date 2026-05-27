@@ -1,0 +1,957 @@
+openapi: 3.0.1
+info:
+  title: Tour
+  description: Example workspace
+  version: 1.0.0
+tags: []
+paths:
+  /tours:
+    get:
+      summary: Search for tours
+      operationId: searchForTours
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: dayCount
+          in: query
+          required: true
+          example: 3
+          schema:
+            type: integer
+        - name: nightCount
+          in: query
+          required: true
+          example: 2
+          schema:
+            type: integer
+        - name: text
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: price
+          in: query
+          required: false
+          example: 1000000
+          schema:
+            type: integer
+        - name: pickUp
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: dropOff
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: transit
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Transit'
+        - name: fromDate
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SummarizedTour'
+                  metadata:
+                    $ref: '#/components/schemas/SearchResultMetadata'
+                required:
+                  - data
+                  - metadata
+          headers: {}
+        '500':
+          $ref: '#/components/responses/default'
+          description: ''
+    post:
+      summary: Host tour
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourCreation'
+      responses:
+        '201':
+          description: The request was successful, and a new resource was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteTour'
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}:
+    get:
+      summary: Get tour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteTour'
+          headers: {}
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+    patch:
+      summary: Refine tour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TourModification'
+            examples: {}
+        required: true
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TourModification'
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+      security: []
+  /tours/{id}/departures/{id}/tourists:
+    get:
+      summary: Get tourists in a tour departure
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tourist'
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}/price-tables:
+    post:
+      summary: Compose price table
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PriceTableCreation'
+            examples: {}
+        required: true
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}/departures:
+    post:
+      summary: Schedule departure
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartureCreation'
+            examples: {}
+        required: true
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}/publish:
+    post:
+      summary: Publish tour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}/ratings:
+    post:
+      summary: Rate tour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingCreation'
+            examples: {}
+        required: true
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}/cancel:
+    post:
+      summary: Cancel tour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}/unpublish:
+    post:
+      summary: Unpublish tour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{tourId}/ratings/{ratingId}:
+    put:
+      summary: Adjust rating
+      tags: []
+      parameters:
+        - name: tourId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: ratingId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingCreation'
+            examples: {}
+        required: true
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}/departures/{id}:
+    delete:
+      summary: Cancel departure
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /tours/{id}/price-tables/{id}:
+    delete:
+      summary: Remove price table
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+components:
+  schemas:
+    TourModification:
+      type: object
+      properties:
+        policy:
+          $ref: '#/components/schemas/Policy'
+        timeline:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimelineItem'
+        images:
+          type: array
+          items:
+            type: string
+        description:
+          $ref: '#/components/schemas/Description'
+      description: ''
+    SummarizedTour:
+      type: object
+      required:
+        - id
+        - title
+        - prices
+        - stays
+        - transits
+        - tags
+        - dropOff
+        - pickUp
+        - schedules
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        pickUp:
+          type: string
+        dropOff:
+          type: string
+        transits:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transit'
+        stays:
+          type: array
+          items:
+            type: string
+        schedules:
+          type: array
+          items:
+            type: string
+        prices:
+          type: array
+          items:
+            type: integer
+        tags:
+          type: array
+          items:
+            type: string
+      description: A summarized model for tour
+    CompleteTour:
+      type: object
+      required:
+        - id
+        - title
+        - pickUp
+        - dropOff
+        - images
+        - priceTables
+        - schedules
+        - timeline
+        - policy
+        - status
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        introduction:
+          type: string
+          nullable: true
+        images:
+          type: array
+          items:
+            type: string
+        description:
+          $ref: '#/components/schemas/Description'
+          nullable: true
+        pickUp:
+          type: string
+        dropOff:
+          type: string
+        policy:
+          $ref: '#/components/schemas/Policy'
+        timeline:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimelineItem'
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartureCreation'
+        priceTables:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompletePriceTable'
+        status:
+          description: status
+          $ref: '#/components/schemas/TourStatus'
+      description: A complete model for tour
+    TourCreation:
+      type: object
+      properties:
+        title:
+          type: string
+        introduction:
+          type: string
+          nullable: true
+        images:
+          type: array
+          items:
+            type: string
+        pickUp:
+          type: string
+        dropOff:
+          type: string
+        policy:
+          $ref: '#/components/schemas/Policy'
+        timeline:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimelineItem'
+      required:
+        - title
+        - pickUp
+        - dropOff
+        - images
+        - timeline
+        - policy
+    Description:
+      type: object
+      required:
+        - attractions
+        - eats
+        - idealTime
+        - offers
+        - recommendedFor
+      properties:
+        attractions:
+          type: string
+        eats:
+          type: string
+        recommendedFor:
+          type: string
+        idealTime:
+          type: string
+        offers:
+          type: string
+      description: ''
+    Policy:
+      type: object
+      required:
+        - inclusions
+        - exclusions
+        - childPricing
+        - paymentTerms
+        - bookingConditions
+        - changesAndCancellations
+        - standardCancellationPolicy
+        - holidayCancellationPolicy
+        - forceMajeure
+        - contact
+        - visaPolicy
+      properties:
+        inclusions:
+          type: string
+        exclusions:
+          type: string
+        childPricing:
+          type: string
+        paymentTerms:
+          type: string
+        bookingConditions:
+          type: string
+        changesAndCancellations:
+          type: string
+        standardCancellationPolicy:
+          type: string
+        holidayCancellationPolicy:
+          type: string
+        forceMajeure:
+          type: string
+        contact:
+          type: string
+        visaPolicy:
+          type: string
+      description: ''
+    TimelineItem:
+      type: object
+      required:
+        - destinations
+        - meals
+        - details
+      properties:
+        destinations:
+          type: array
+          items:
+            type: string
+        meals:
+          type: array
+          items:
+            enum:
+              - breakfast
+              - lunch
+              - dinner
+            type: string
+        details:
+          type: string
+      description: ''
+    DepartureCreation:
+      type: object
+      required:
+        - takeOffDate
+        - stay
+        - seatPolicy
+        - priceTableId
+        - arrivalTime
+        - returnTime
+        - transit
+      properties:
+        takeOffDate:
+          type: string
+        seatPolicy:
+          $ref: '#/components/schemas/SeatPolicy'
+        arrivalTime:
+          $ref: '#/components/schemas/TimePeriod'
+        returnTime:
+          $ref: '#/components/schemas/TimePeriod'
+        stay:
+          $ref: '#/components/schemas/Stay'
+        transit:
+          $ref: '#/components/schemas/Transit'
+        priceTableId:
+          type: string
+        note:
+          type: string
+      description: ''
+    CompletePriceTable:
+      type: object
+      required:
+        - id
+        - name
+        - singleRoomPrice
+        - agePrices
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        agePrices:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - from
+              - to
+              - price
+            properties:
+              to:
+                type: integer
+              from:
+                type: integer
+              name:
+                type: string
+              price:
+                type: integer
+        singleRoomPrice:
+          type: integer
+      description: ''
+    PriceTableCreation:
+      type: object
+      required:
+        - name
+        - singleRoomPrice
+        - agePrices
+      properties:
+        name:
+          type: string
+        agePrices:
+          type: array
+          items:
+            type: object
+            required:
+              - from
+              - to
+              - name
+              - price
+            properties:
+              to:
+                type: integer
+              from:
+                type: integer
+              name:
+                type: string
+              price:
+                type: integer
+        singleRoomPrice:
+          type: integer
+      description: ''
+    TourStatus:
+      enum:
+        - published
+        - unpublished
+      type: string
+    SeatPolicy:
+      type: object
+      required:
+        - capacity
+        - reservedSeats
+        - minimumAge
+      properties:
+        capacity:
+          type: integer
+        minimumAge:
+          type: integer
+        reservedSeats:
+          type: integer
+      description: ''
+    TimePeriod:
+      type: object
+      required:
+        - from
+        - to
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+      description: A structure for start and end period
+    Stay:
+      type: object
+      required:
+        - dayCount
+        - nightCount
+      properties:
+        dayCount:
+          type: integer
+        nightCount:
+          type: integer
+      description: ''
+    Transit:
+      enum:
+        - airplane
+        - car
+      type: string
+      description: ''
+    RatingCreation:
+      type: object
+      required:
+        - score
+        - review
+      properties:
+        score:
+          type: string
+        review:
+          type: string
+      description: ''
+    Tourist:
+      type: object
+      required:
+        - fullname
+        - gender
+        - dateOfBirth
+        - wantSingleRoom
+      properties:
+        fullname:
+          type: string
+        gender:
+          enum:
+            - male
+            - female
+          type: string
+          default: male
+        dateOfBirth:
+          type: string
+        wantSingleRoom:
+          type: boolean
+      description: ''
+    SearchResultMetadata:
+      type: object
+      required:
+        - filters
+        - pagination
+        - sort
+      properties:
+        filters:
+          type: array
+          items:
+            type: object
+            required:
+              - any
+              - name
+            properties:
+              name:
+                type: string
+              any:
+                type: object
+                properties: {}
+        sort:
+          type: array
+          items:
+            type: object
+            required:
+              - direction
+              - name
+            properties:
+              name:
+                type: string
+              direction:
+                type: string
+        pagination:
+          type: object
+          required:
+            - elements
+            - last
+            - page
+            - size
+          properties:
+            page:
+              type: integer
+            size:
+              type: integer
+            last:
+              type: integer
+            elements:
+              type: integer
+      description: ''
+  responses:
+    default:
+      description:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+servers: []
+security: []

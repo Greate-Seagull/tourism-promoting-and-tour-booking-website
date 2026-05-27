@@ -11,10 +11,10 @@ box "Application Server" #LightBlue
     participant ":RoleRequest" as activeRecord
 end box
 
-tourist -> controller : rejectRequest()
+tourist -> controller : rejectRequest(request)
 activate controller
 
-controller -> handler : rejectRequest()
+controller -> handler : rejectRequest(command)
 activate handler
 
 handler -> accRepo : getAdminById(accountId)
@@ -27,7 +27,7 @@ deactivate accRepo
 'handler <-- act : true
 'deactivate act
 
-handler -> activeRecord : reject(requestId)
+handler -> activeRecord : reject(requestId, reason)
 deactivate handler
 
 controller --> tourist : HTTP 204

@@ -1,0 +1,19 @@
+@startuml
+
+|Tourist|
+start
+:(1) Agree to report an article;
+
+|System|
+if ((2) Validate the report has been created) is (yes) then
+:(2a1) Inform the tourist about the status;
+else (no)
+:(2b1) Inform the tourist about the success;
+endif
+
+|Tourist|
+:(3) Review the result;
+
+stop
+
+@enduml

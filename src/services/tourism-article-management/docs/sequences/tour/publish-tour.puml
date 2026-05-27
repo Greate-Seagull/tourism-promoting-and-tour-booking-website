@@ -9,6 +9,7 @@ box "Application Server" #LightBlue
     participant ":AccountRepository" as accRepo
     participant ":TourRepository" as tourRepo
     participant ":TourOperator" as tourOp
+    participant ":TourSchedule" as tour
 end box
 
 tourist -> controller : publish(request)
@@ -21,20 +22,27 @@ handler -> accRepo : getTourOperatorById(accountId)
 activate accRepo
 handler <-- accRepo : TourOperator
 deactivate accRepo
-handler -> tourRepo : getTourToBePublishedById(tourId)
+handler -> tourRepo : getScheduleById(tourId)
 activate tourRepo
-handler <-- tourRepo : BeingPublishedTour
+handler <-- tourRepo : TourSchedule
 deactivate tourRepo
 
-handler -> tourOp : publishTour(tour)
+handler -> tourOp : publish(tour)
 activate tourOp
 tourOp -> tourOp : hasHosted(tour)
-tourOp -> tourOp : !hasPublished(tour)
-tourOp -> tourOp : hasScheduled(tour)
+tourOp -> tourOp : hasVerifiedWallet()
+tourOp -> tourOp : not hasPublished(tour)
+tourOp -> tourOp : hasDepartures(tour)
+
+alt Tour cannot be published
+handler <-- tourOp : false
+else
 handler <-- tourOp : true
 deactivate tourOp
+handler -> tour: publish()
+handler -> tourRepo : save(tour)
+end
 
-handler -> tourRepo : publish(tourId)
 
 deactivate handler
 

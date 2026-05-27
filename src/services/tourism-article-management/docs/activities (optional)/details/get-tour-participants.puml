@@ -1,0 +1,15 @@
+@startuml
+
+|Tour operator|
+start
+:(1) Open departure participant section;
+
+|System|
+:(2) Return the list of participants;
+
+|Tour operator|
+:(3) Review the result;
+
+stop
+
+@enduml

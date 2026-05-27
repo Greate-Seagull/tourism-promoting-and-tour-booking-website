@@ -1,0 +1,15 @@
+@startuml
+
+|Admin|
+start
+:(1) Provide the reason of demotion;
+
+|System|
+:(2) Save the account status;
+:(3) Inform the admin and the account owner about the removal;
+
+|Admin|
+:(4) Review the result;
+stop
+
+@enduml

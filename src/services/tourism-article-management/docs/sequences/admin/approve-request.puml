@@ -12,10 +12,10 @@ box "Application Server" #LightBlue
     participant ":EventPublisher" as eventPub
 end box
 
-tourist -> controller : approveRequest()
+tourist -> controller : approveRequest(request)
 activate controller
 
-controller -> handler : approveRequest()
+controller -> handler : approveRequest(command)
 activate handler
 
 handler -> accRepo : getAdminById(accountId)
@@ -29,7 +29,7 @@ act -> act : apply(RequestApproved)
 handler <-- act : true
 deactivate act
 
-handler -> activeRecord : approve(requestId)
+handler -> activeRecord : approve(requestId, reason)
 handler -> eventPub : publish(events)
 
 deactivate handler

@@ -1,0 +1,18 @@
+@startuml
+
+|Tour operator|
+start
+repeat :(1) Provide required information;
+
+|System|
+backward :(2a1) Inform about the mistake;
+repeat while ((2) Validate the information) is (fails)
+:(3) Save the price table;
+:(4) Return the price tables list;
+
+|Tour operator|
+:(5) Review the result;
+
+stop
+
+@enduml

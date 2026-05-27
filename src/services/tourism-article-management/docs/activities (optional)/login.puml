@@ -1,0 +1,18 @@
+@startuml
+
+|User|
+start
+:(1) Ask for using authenticated features;
+|System|
+:(2) Offer signing in;
+|User|
+:(3) Choose either signing in or signing up;
+repeat :(4) Supply account identifier and credentials;
+|System|
+backward :(5a1) Inform user of a specific error;
+repeat while ((5) Validate credentials) is (fails)
+:(6) Authenticate user and lets him use the requested feature;
+
+stop
+
+@enduml

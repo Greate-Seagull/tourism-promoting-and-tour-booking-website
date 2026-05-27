@@ -1,0 +1,15 @@
+@startuml
+
+|Admin|
+start
+:(1) Select filter options and submit;
+
+|System|
+:(2) Return articles matching the filter;
+
+|Admin|
+:(3) Review the result;
+
+stop
+
+@enduml

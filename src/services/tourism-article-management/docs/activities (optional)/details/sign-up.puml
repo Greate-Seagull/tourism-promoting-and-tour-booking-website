@@ -1,0 +1,18 @@
+@startuml
+
+|New user|
+start
+repeat :(1) Provide credentials;
+
+|System|
+backward :(2a1) Inform about the situation;
+repeat while ((2) Validate credentials) is (fails)
+:(3) Save the created account;
+:(4) Authenticate user;
+
+|New user|
+:(5) Access the main site;
+
+stop
+
+@enduml

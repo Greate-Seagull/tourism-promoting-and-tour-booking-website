@@ -1,0 +1,41 @@
+@startuml
+title Activity Diagram: Read Article
+
+|User|
+start
+: (1) Ask to see available articles;
+
+|System|
+if (Matching articles found?) then (yes)
+    : (2) Display collection of matching articles;
+else (no [2a])
+    : (2.1) Offer recently popular articles;
+endif
+
+|User|
+repeat
+    : (3) Select an article to read;
+
+|System|
+    if (Article exists? [4a]) then (no)
+        : (4.1) Offer a set of related articles;
+    else (yes)
+        : (4) Retrieve full article content;
+
+        if (Media loaded? [4b]) then (yes)
+            : Deliver content with embedded media;
+        else (no)
+            : (4b.1) Display alternate text;
+        endif
+
+        : (5) Offer a set of related articles;
+    endif
+
+|User|
+    : (6) Read article;
+
+backward:Follow a related article;
+repeat while (Continue reading?) is (yes) not (no)
+
+stop
+@enduml

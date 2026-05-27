@@ -1,0 +1,18 @@
+@startuml
+
+|User|
+start
+:(1) Ask to see highly reported articles;
+|System|
+:(2) Return articles matching the request;
+|User|
+:(3) Select one article and requests its reports;
+|System|
+:(4) Deliver the reports for that article;
+|User|
+:(5) Decide to remove the article or clear all reports on the article;
+|System|
+:(6) Process the decision and notifies admin;
+stop
+
+@enduml

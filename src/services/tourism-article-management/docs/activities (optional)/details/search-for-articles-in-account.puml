@@ -1,0 +1,15 @@
+@startuml
+
+|Editor|
+start
+:(1) Select private filter options and submit;
+
+|System|
+:(2) Return articles matching the filter;
+
+|Editor|
+:(3) Review the result;
+
+stop
+
+@enduml

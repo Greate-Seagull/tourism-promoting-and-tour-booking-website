@@ -1,0 +1,17 @@
+@startuml
+
+|Specialist|
+start
+repeat :(1) Provide timing options and select which view to see;
+
+|System|
+backward :(2a1) Inform about the rejection;
+repeat while ((2) Validate specialist roles) is (fails)
+:(3) Return metrics;
+
+|Specialist|
+:(4) Review the result;
+
+stop
+
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+
+|User|
+start
+:(1) Supply the reason for reporting the article;
+|System|
+if ((2) Validate the report) is (fails) then
+:(2a1) Inform the reason;
+stop
+else
+:(3) Save the report and route the report to admin;
+
+stop
+
+@enduml

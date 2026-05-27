@@ -7,6 +7,7 @@ box "Application Server" #LightBlue
     participant ":AccountController" as controller
     participant ":AccountCommandHandler" as handler
     participant ":Account" as activeRecord
+    participant ":AccountLockRepository" as lockRepo
     participant ":EncryptionService" as encrypt
     participant ":TokenService" as token
 end box
@@ -17,6 +18,10 @@ activate controller
 controller -> handler : signin(command)
 activate handler
 
+handler -> lockRepo : getById(accountId)
+lockRepo --> handler : AccountLock
+
+alt account is not locked
 alt phoneNumber is not null
 handler -> activeRecord : getByPhoneNumber(phoneNumber)
 activate activeRecord
@@ -34,6 +39,8 @@ handler -> token : generate(accountId, role)
 deactivate handler
 
 controller --> tourist : HTTP 201 + JSON (Token)
+
+end
 deactivate controller
 
 @enduml
