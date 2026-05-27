@@ -6,7 +6,9 @@ import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringPath;
+import com.uit.tourism_article_management.article.presentation.view.AdminArticleQuery;
 import com.uit.tourism_article_management.article.presentation.view.ArticleQuery;
+import com.uit.tourism_article_management.tour.presentation.view.OperatorTourQuery;
 import com.uit.tourism_article_management.tour.presentation.view.ProductQuery;
 
 public class QueryDslPredicateBuilder {
@@ -54,6 +56,14 @@ public class QueryDslPredicateBuilder {
     }
 
     public static Predicate from(ArticleQuery query) {
+        return new BooleanBuilder();
+    }
+
+    public static Predicate from(AdminArticleQuery query) {
+        return new BooleanBuilder();
+    }
+
+    public static Predicate from(OperatorTourQuery query) {
         return new BooleanBuilder();
     }
 }

@@ -6,11 +6,11 @@ import com.uit.tourism_article_management.tour.application.port.TourProjection;
 import com.uit.tourism_article_management.tour.domain.price_table.PriceTable;
 import com.uit.tourism_article_management.tour.domain.Tour;
 import com.uit.tourism_article_management.tour.domain.order.Tourist;
+import com.uit.tourism_article_management.tour.infrastructure.persistence.JpaTourRepository;
 import com.uit.tourism_article_management.tour.infrastructure.utils.MapstructTourMapper;
-import com.uit.tourism_article_management.tour.presentation.view.DepartureCreation;
-import com.uit.tourism_article_management.tour.presentation.view.TourCreation;
-import com.uit.tourism_article_management.tour.presentation.view.TourModifiable;
-import com.uit.tourism_article_management.tour.presentation.view.TourModification;
+import com.uit.tourism_article_management.tour.presentation.view.*;
+import com.uit.tourism_article_management.utils.QueryDslPredicateBuilder;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +26,13 @@ public class OperatorTourController {
     private final TourCommandHandler commandHandler;
     private final MapstructTourMapper mapper;
     private final TourProjection projection;
+    private final JpaTourRepository repository;
 
-    public OperatorTourController(TourCommandHandler commandHandler, MapstructTourMapper mapper, TourProjection projection) {
+    public OperatorTourController(TourCommandHandler commandHandler, MapstructTourMapper mapper, TourProjection projection, JpaTourRepository repository) {
         this.commandHandler = commandHandler;
         this.mapper = mapper;
         this.projection = projection;
+        this.repository = repository;
     }
 
     @PostMapping
@@ -127,5 +129,23 @@ public class OperatorTourController {
     ) {
         List<Tourist> tourists = this.projection.findTouristsOfDeparture(tourId, takeOffDate);
         return ResponseEntity.ok(tourists);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('TOUR_OPERATOR')")
+    public ResponseEntity search(
+            @ModelAttribute OperatorTourQuery query,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                this.repository.findAll(QueryDslPredicateBuilder.from(query), pageable)
+        );
+    }
+
+    @GetMapping("/{tourId}/price-tables")
+    @PreAuthorize("hasRole('TOUR_OPERATOR')")
+    public ResponseEntity getAllPriceTables(@PathVariable String tourId) {
+        List<PriceTable> prices = this.projection.findPricesOfTour(tourId);
+        return ResponseEntity.ok(prices);
     }
 }

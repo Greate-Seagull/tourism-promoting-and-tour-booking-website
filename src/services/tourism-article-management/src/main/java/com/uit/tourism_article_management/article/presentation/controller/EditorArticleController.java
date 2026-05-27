@@ -1,5 +1,6 @@
 package com.uit.tourism_article_management.article.presentation.controller;
 
+import com.uit.tourism_article_management.article.application.port.ArticleProjection;
 import com.uit.tourism_article_management.article.infrastructure.utils.MapstructArticleMapper;
 import com.uit.tourism_article_management.article.application.ArticleCommandHandler;
 import com.uit.tourism_article_management.article.domain.Article;
@@ -11,16 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/editor/articles")
 public class EditorArticleController {
     private final ArticleCommandHandler commandHandler;
     private final MapstructArticleMapper mapper;
+    private final ArticleProjection projection;
 
-    public EditorArticleController(ArticleCommandHandler commandHandler, MapstructArticleMapper mapper) {
+    public EditorArticleController(ArticleCommandHandler commandHandler, MapstructArticleMapper mapper, ArticleProjection projection) {
         this.commandHandler = commandHandler;
         this.mapper = mapper;
+        this.projection = projection;
     }
 
     @PostMapping
@@ -64,5 +68,12 @@ public class EditorArticleController {
     public ResponseEntity remove(@PathVariable String articleId) {
         this.commandHandler.remove(articleId, SecurityUtils.getRequiredAccountId());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasRole('EDITOR')")
+    public ResponseEntity getAll() {
+        List<SummarizedArticle> articles = this.projection.findSummariesOfEditor(SecurityUtils.getRequiredAccountId());
+        return ResponseEntity.ok(articles);
     }
 }

@@ -10,7 +10,6 @@ public class AvailableDeparture {
     private LocalDate takeOffDate;
     private int reservedSeats;
     private int registrationCount;
-    private int dayCount;
     private TransitTime returnTime;
     private Stay stay;
     private Transit transit;
@@ -28,7 +27,7 @@ public class AvailableDeparture {
     }
 
     public boolean hasEnded() {
-        return this.takeOffDate.plusDays(this.dayCount).with(returnTime.to()).isBefore(LocalDate.now());
+        return this.takeOffDate.plusDays(this.stay.dayCount()).with(returnTime.to()).isBefore(LocalDate.now());
     }
 
     public boolean isTookOffAt(List<LocalDate> takeOffDates) {

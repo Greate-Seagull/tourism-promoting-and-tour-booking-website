@@ -1,6 +1,6 @@
 package com.uit.tourism_article_management.article.application;
 
-import com.uit.tourism_article_management.account.AccountRepository;
+import com.uit.tourism_article_management.account.application.port.AccountRepository;
 import com.uit.tourism_article_management.article.application.port.ArticleRepository;
 import com.uit.tourism_article_management.article.application.port.MediaStore;
 import com.uit.tourism_article_management.article.application.port.TextRefiner;
