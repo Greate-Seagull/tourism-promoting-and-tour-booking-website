@@ -1,6 +1,7 @@
 package com.uit.tourism_article_management.tour.application;
 
 
+import com.uit.tourism_article_management.account.AccountRepository;
 import com.uit.tourism_article_management.exception.ClientException;
 import com.uit.tourism_article_management.tour.application.port.*;
 import com.uit.tourism_article_management.tour.domain.*;
