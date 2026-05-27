@@ -1,0 +1,15 @@
+@startuml
+
+|User|
+start
+:(1) Ask to work with accounts (search, promote, demote, ban);
+|System|
+:(2) Return the list of accounts;
+|User|
+repeat :(3) Select an account and the desired operation;
+|System|
+backward :(4a1) Return specific errors;
+repeat while ((4) Validate and serve the request) is (fails)
+stop
+
+@enduml

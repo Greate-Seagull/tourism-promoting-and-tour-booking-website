@@ -1,0 +1,42 @@
+@startuml
+
+autonumber
+
+actor "Tour operator" as tourist
+box "Application Server" #LightBlue
+    participant ":TourController" as controller
+    participant ":DepartureQueryHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":OrderProjection" as orderPro
+    participant ":TourOperator" as tourOp
+end box
+
+tourist -> controller : getTourists(request)
+activate controller
+
+controller -> handler : getTourists(query)
+activate handler
+
+handler -> accRepo : getTourOperatorById(accountId)
+activate accRepo
+handler <-- accRepo : TourOperator
+deactivate accRepo
+
+handler -> tourOp : viewTouristsOf(tour)
+activate tourOp
+tourOp -> tourOp : hasHosted(tour)
+handler <-- tourOp : true
+deactivate tourOp
+
+handler -> orderPro : getTouristsOf(tourId, takeOffDate)
+activate orderPro
+orderPro --> handler : Tourists
+deactivate orderPro
+
+handler --> controller : Tourists
+deactivate handler
+
+controller --> tourist : HTTP 200 + JSON (Tourists)
+deactivate controller
+
+@enduml

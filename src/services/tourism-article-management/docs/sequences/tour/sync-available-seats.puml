@@ -1,0 +1,47 @@
+@startuml
+
+autonumber
+
+participant ":MessageBus" as messageBus
+box "Application Server" #LightBlue
+    participant ":EventSubscriber" as subscriber
+    participant ":TourEventHandler" as eventHandler
+    participant ":TourCommandHandler" as commandHandler
+    participant ":OrderRepository" as orderRepo
+    participant ":TourRepository" as tourRepo
+    participant ":TourSchedule" as schedule
+    participant ":AvailableDeparture" as departure
+end box
+
+messageBus -> subscriber : onMessage(OrderCommited/OrderRefunded)
+activate subscriber
+
+subscriber -> eventHandler : handle(OrderCommited/OrderRefunded)
+activate eventHandler
+
+eventHandler -> commandHandler : reserveSeats(command)
+activate commandHandler
+
+commandHandler -> orderRepo : getOptionsById(orderId)
+activate orderRepo
+orderRepo --> commandHandler : OrderOptions
+deactivate orderRepo
+
+commandHandler -> tourRepo : getScheduleById(tourId)
+activate tourRepo
+tourRepo --> commandHandler : TourSchedule
+deactivate tourRepo
+
+commandHandler -> schedule : getScheduleDetails(takeOffDate)
+activate schedule
+schedule --> commandHandler : AvailableDeparture
+deactivate schedule
+
+commandHandler -> departure : calculateOccupancy(order)
+commandHandler -> tourRepo : reserveSeats(tourId, takeOffDate, currentAvailableSeats)
+deactivate commandHandler
+
+deactivate eventHandler
+deactivate subscriber
+
+@enduml

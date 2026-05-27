@@ -1,0 +1,18 @@
+@startuml
+component "Tour" as Tour
+component "Article" as Article
+component "Order" as Order
+component "Account" as Account
+component "Admin" as Admin
+component "Media" as Media
+
+Tour ....> Account
+Tour ..> Order
+Tour ...> Media
+Article ....> Account
+Article ...> Media
+Order ....> Account
+Order ..> Tour
+Admin ....> Account
+Admin ..> Article
+@enduml

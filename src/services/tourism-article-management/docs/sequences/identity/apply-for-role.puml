@@ -1,0 +1,38 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":AccountController" as controller
+    participant ":AccountCommandHandler" as handler
+    participant ":Account" as accRecord
+    participant ":RoleRequest" as requestRecord
+end box
+
+tourist -> controller : apply(request)
+activate controller
+
+controller -> handler : apply(command)
+activate handler
+
+handler -> accRecord : getById(accountId)
+activate accRecord
+handler <-- accRecord : Account
+deactivate accRecord
+
+handler -> accRecord : applyFor(role)
+activate accRecord
+accRecord -> accRecord : !hasRole(role)
+handler <-- accRecord : true
+deactivate
+
+handler -> requestRecord ** : create(request)
+handler -> requestRecord : save()
+
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

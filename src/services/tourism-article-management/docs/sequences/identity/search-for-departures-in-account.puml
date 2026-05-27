@@ -1,0 +1,34 @@
+@startuml
+autonumber
+
+actor "Tourist" as user
+box "Application Server" #LightBlue
+    participant ":AccountController" as controller
+    participant ":DepartureQueryHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":DepartureProjection" as projection
+end box
+
+user -> controller : privateSearch(request)
+activate controller
+
+controller -> handler : privateSearch(privateQuery)
+activate handler
+
+handler -> accRepo : getTourOperatorById(accountId)
+activate accRepo
+handler <-- accRepo : TourOperator
+deactivate accRepo
+
+handler -> projection : privateSearch(privateQuery)
+activate projection
+projection --> handler : List<SummarizedPrivateDeparture>
+deactivate projection
+
+handler --> controller : List<SummarizedPrivateDeparture>
+deactivate handler
+
+controller --> user : HTTP 200 + JSON list
+deactivate controller
+
+@enduml

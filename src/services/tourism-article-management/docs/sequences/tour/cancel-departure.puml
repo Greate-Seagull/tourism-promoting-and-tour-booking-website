@@ -1,0 +1,48 @@
+@startuml
+
+autonumber
+
+actor "Tour operator" as user
+box "Application Server" #LightBlue
+    participant ":TourController" as controller
+    participant ":TourCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":TourRepository" as tourRepo
+    participant ":TourOperator" as tourOp
+end box
+
+user -> controller : cancelDeparture(request)
+activate controller
+
+controller -> handler : cancelDeparture(command)
+activate handler
+
+handler -> accRepo : getTourOperatorById(accountId)
+activate accRepo
+handler <-- accRepo : TourOperator
+deactivate accRepo
+handler -> tourRepo : getScheduleById(tourId)
+activate tourRepo
+handler <-- tourRepo : TourSchedule
+deactivate tourRepo
+
+handler -> tourOp : cancelDeparture(tour)
+activate tourOp
+tourOp -> tourOp : hasHosted(tour)
+'tourOp -> tourOp : canDepartureCancelled(takeOffDate)
+tourOp -> tourOp : isDateScheduled(takeOffDate)
+tourOp -> tourOp : !isDepartureEnded(takeOffDate)
+tourOp -> tourOp : !isDepartureRegistered(takeOffDate)
+tourOp -> tourOp : hasPublished(tour)
+tourOp -> tourOp : !hasOneDeparture(tour)
+handler <-- tourOp : true
+deactivate tourOp
+
+handler -> tourRepo : cancelDeparture(tourId, takeOffDate)
+
+deactivate handler
+
+controller --> user : HTTP 204
+deactivate controller
+
+@enduml

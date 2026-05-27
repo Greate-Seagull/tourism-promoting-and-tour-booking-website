@@ -1,0 +1,18 @@
+@startuml
+
+|Editor|
+start
+repeat :(1) Design article presentation;
+
+|System|
+backward :(2a1) Inform about the mistake;
+repeat while ((2) Validate the information) is (fails)
+:(3) Save the updated article;
+:(4) Return the updated article;
+
+|Editor|
+:(5) Review the result;
+
+stop
+
+@enduml

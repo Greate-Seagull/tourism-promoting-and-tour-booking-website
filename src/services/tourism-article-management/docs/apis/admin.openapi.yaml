@@ -1,0 +1,472 @@
+openapi: 3.0.1
+info:
+  title: Admin
+  description: Example workspace
+  version: 1.0.0
+paths:
+  /admin/articles:
+    get:
+      summary: Search for articles (required admin)
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: accountId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: reports
+          in: query
+          required: false
+          example: 0
+          schema:
+            type: integer
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                title: SearchForArticlesRequiredAdminOk
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SummarizedInternalArticle'
+                  metadata:
+                    $ref: '#/components/schemas/SearchResultMetadata'
+                required:
+                  - data
+                  - metadata
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /admin/articles/{id}/reports:
+    get:
+      summary: Search for reports of article (required admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompleteReport'
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /admin/role-requests:
+    get:
+      summary: Search for role requests (required admin)
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: accountId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: role
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Role'
+        - name: status
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/RoleRequestStatus'
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CompleteRoleRequest'
+                  metadata:
+                    $ref: '#/components/schemas/SearchResultMetadata'
+                required:
+                  - data
+                  - metadata
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /admin/accounts/{id}/promote:
+    post:
+      summary: Promote account
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - roles
+              properties:
+                roles:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Role'
+        required: true
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /admin/accounts/{id}/demote:
+    post:
+      summary: Demote account
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - roles
+              properties:
+                roles:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Role'
+        required: true
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /admin/accounts/{id}/ban:
+    post:
+      summary: Ban account
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /admin/role-requests/{id}/approve:
+    post:
+      summary: Approve request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+              required:
+                - reason
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /admin/role-requests/{id}/reject:
+    post:
+      summary: Reject request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+              required:
+                - reason
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+components:
+  schemas:
+    SummarizedInternalArticle:
+      type: object
+      properties:
+        id:
+          type: string
+        accountId:
+          type: string
+        reports:
+          type: integer
+      required:
+        - id
+        - accountId
+        - reports
+      description: ''
+    CompleteRoleRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        accountId:
+          type: string
+        role:
+          $ref: '#/components/schemas/Role'
+        profile:
+          type: array
+          items:
+            $ref: '#/components/schemas/Paper'
+        status:
+          $ref: '#/components/schemas/RoleRequestStatus'
+      required:
+        - id
+        - accountId
+        - role
+        - profile
+        - status
+      description: ''
+    Role:
+      enum:
+        - editor
+        - tour-operator
+      type: string
+      description: ''
+    Paper:
+      type: object
+      properties:
+        identity:
+          type: string
+        organization:
+          type: string
+      required:
+        - identity
+        - organization
+      description: ''
+    RoleRequestStatus:
+      type: string
+      default: pending
+      enum:
+        - pending
+        - approved
+        - rejected
+      description: ''
+    CompleteReport:
+      type: object
+      properties:
+        id:
+          type: string
+        articleId:
+          type: string
+        reason:
+          type: string
+        accountId:
+          type: string
+      required:
+        - id
+        - articleId
+        - reason
+        - accountId
+      description: ''
+    SearchResultMetadata:
+      type: object
+      required:
+        - filters
+        - pagination
+        - sort
+      properties:
+        filters:
+          type: array
+          items:
+            type: object
+            required:
+              - any
+              - name
+            properties:
+              name:
+                type: string
+              any:
+                type: object
+                properties: {}
+        sort:
+          type: array
+          items:
+            type: object
+            required:
+              - direction
+              - name
+            properties:
+              name:
+                type: string
+              direction:
+                type: string
+        pagination:
+          type: object
+          required:
+            - elements
+            - last
+            - page
+            - size
+          properties:
+            page:
+              type: integer
+            size:
+              type: integer
+            last:
+              type: integer
+            elements:
+              type: integer
+      description: ''
+  responses:
+    default:
+      description:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message

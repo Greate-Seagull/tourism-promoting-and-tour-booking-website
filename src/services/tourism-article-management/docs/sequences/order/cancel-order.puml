@@ -1,0 +1,51 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":OrderController" as controller
+    participant ":OrderCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":OrderRepository" as ordRepo
+    participant ":TourRepository" as tourRepo
+    participant ":EncryptionService" as encrypt
+    participant ":PaymentRepository" as payRepo
+    participant ":Tourist" as touristAcc
+end box
+
+tourist -> controller : cancel(request)
+activate controller
+
+controller -> handler : cancel(command)
+activate handler
+
+handler -> accRepo : getTouristById(accountId)
+activate accRepo
+handler <-- accRepo : Tourist
+deactivate accRepo
+handler -> ordRepo : getById(orderId)
+activate ordRepo
+ordRepo --> handler : Order
+deactivate ordRepo
+handler -> tourRepo : getScheduleById(tourId)
+activate tourRepo
+handler <-- tourRepo : TourSchedule
+deactivate tourRepo
+
+handler -> touristAcc : cancelOrder(order, tour)
+activate touristAcc
+touristAcc -> touristAcc : isCommitted(order)
+touristAcc -> touristAcc : isRefundable(tour)
+handler <-- touristAcc : true
+deactivate touristAcc
+
+handler -> encrypt : hashSignature(orderId, idempotencyKey) (using HMAC-SHA256)
+handler -> payRepo : requestRefund(transactionId, webhookUrl, signature, idempotencyKey) (idempotency key created from operationName + orderId)
+handler -> ordRepo : refunding(orderId)
+deactivate handler
+
+controller --> tourist : HTTP 202
+deactivate controller
+
+@enduml

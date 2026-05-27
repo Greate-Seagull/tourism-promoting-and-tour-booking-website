@@ -1,0 +1,40 @@
+@startuml
+
+|Tourist|
+start
+repeat :(1) Provide tourists options;
+
+|System|
+backward :(2a1) Inform about the mistake or the status;
+repeat while ((2) Validate the information and the tour status) is (fails)
+:(3) Save the created order in pending;
+repeat :(4) Calculate the total price of the order;
+:(5) Request QR from the calculated price;
+
+|Bank gateway|
+:(6) Return the QR;
+
+|System|
+:(7) Return the QR;
+
+|Tourist|
+:(8) Pay the bill through QR;
+
+|Bank gateway|
+:(9) Process the transaction;
+:(10) Inform the result;
+
+|System|
+:(11) Validate the transaction received from webhook;
+backward :(11a2) Inform about the mistake;
+repeat while ((11a1) Is the amount lower than the total) is (yes)
+-> no;
+:(12) Update the order as commited;
+:(13) Return the completed order;
+
+|Tourist|
+:(14) Review the result;
+
+stop
+
+@enduml

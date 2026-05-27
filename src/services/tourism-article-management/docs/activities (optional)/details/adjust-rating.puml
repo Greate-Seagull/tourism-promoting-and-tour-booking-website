@@ -1,0 +1,18 @@
+@startuml
+
+|Tourist|
+start
+repeat :(1) Provide scores and review;
+
+|System|
+backward :(2a1) Inform about the mistake;
+repeat while ((2) Validate the provided information) is (fails)
+:(3) Save the rating;
+:(4) Return the updated rating;
+
+|Tourist|
+:(5) Review the result;
+
+stop
+
+@enduml

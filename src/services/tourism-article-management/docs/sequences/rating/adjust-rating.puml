@@ -1,0 +1,51 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":TourController" as controller
+    participant ":TourCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":TourRepository" as tourRepo
+    participant ":Tourist" as touristAcc
+    participant ":Rating" as rating
+end box
+
+tourist -> controller : adjustRating(request)
+activate controller
+
+controller -> handler : adjustRating(command)
+activate handler
+
+handler -> accRepo : getTouristById(accountId)
+activate accRepo
+handler <-- accRepo : Tourist
+deactivate accRepo
+
+handler -> tourRepo : getRecordById(tourId)
+activate tourRepo
+handler <-- tourRepo : TourRecord
+deactivate tourRepo
+
+handler -> rating : getById(ratingId)
+activate rating
+handler <-- rating : Rating
+deactivate rating
+
+handler -> touristAcc : adjustRating(tour, rating, request)
+activate touristAcc
+touristAcc -> touristAcc : hasPublished(tour)
+touristAcc -> touristAcc : hasOwned(rating)
+touristAcc -> rating ** : create(request)
+handler <-- touristAcc : Rating
+deactivate touristAcc
+
+handler -> rating : save()
+
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

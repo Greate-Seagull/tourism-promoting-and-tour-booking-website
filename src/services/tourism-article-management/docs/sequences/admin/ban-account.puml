@@ -1,0 +1,36 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":AdminController" as controller
+    participant ":AdminCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+'    participant ":Admin" as act
+end box
+
+tourist -> controller : ban(request)
+activate controller
+
+controller -> handler : ban(command)
+activate handler
+
+handler -> accRepo : getAdminById(accountId)
+activate accRepo
+handler <-- accRepo : Admin
+deactivate accRepo
+
+'handler -> act : ban(account)
+'activate act
+'handler <-- act : true
+'deactivate act
+
+handler -> accRepo : ban(accountId, reason)
+
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

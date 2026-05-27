@@ -1,0 +1,33 @@
+@startuml
+
+|Tourist|
+start
+repeat :(1) Agree with cancellation;
+
+|System|
+backward :(2a1) Inform about the status;
+repeat while ((2) Validate the order status) is (fails)
+:(3) Save the created order in refunding;
+:(4) Request refund of a transaction;
+:(5) Return order status;
+
+|Tourist|
+:(6) Review the temporary result;
+
+|Bank gateway|
+:(7) Inform about the transaction;
+
+|System|
+if ((8) Validate the transaction) is (fails) then
+:(8a1) Inform the tourist about the result;
+else (succeeded)
+:(9) Save the order as refunded;
+:(10) Inform the tourist about the status;
+endif
+
+|Tourist|
+:(11) Review the final result;
+
+stop
+
+@enduml

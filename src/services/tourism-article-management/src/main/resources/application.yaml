@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: tourism-article-management
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tourism_article_management
+    username: postgres
+    password: root
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        type:
+          json_format_mapper: com.uit.tourism_article_management.media.infrastructure.Jackson3FormatMapper
+  data:
+    mongo:
+      uri: mongodb://localhost:27017
+      database: resource_management
+    redis:
+#      url: redis://localhost:6379/0
+      host: localhost
+      port: 6379
+      database: 0
+  servlet:
+    multipart:
+      enabled: false
+  storage:
+    cache-root: D:/server-disk-cache
+    disk-ttl-hours: 168 # 1 week
+    cleanup-interval-ms: 36000000 # 1 hour
+  ai:
+    ollama:
+#      base-url: http://localhost:11434
+      embedding:
+        options:
+          model: bge-m3
+    vectorstore:
+      pgvector:
+#        dimensions: 1024
+        initialize-schema: true
+        distance-type: COSINE_DISTANCE
+        index-type: HNSW
+
+jwt:
+  secret: 4891a5d9adc0636af65e6f88f5302d92e7ba8912cbdf168f73c1bb2a790d3b0b
+  issuer: tourism-article-management

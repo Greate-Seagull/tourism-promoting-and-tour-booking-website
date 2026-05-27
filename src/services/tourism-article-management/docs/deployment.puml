@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/deployment-diagram
+
+node "Client" {
+    artifact browser
+}
+node "Server" {
+    artifact application
+}
+node "Database"
+node "External Bank Gateways"
+
+"Client" -- "Server": HTTPS
+"Server" -- "Database": JDBC
+"Server" -- "External Bank Gateways": HTTPS
+@enduml

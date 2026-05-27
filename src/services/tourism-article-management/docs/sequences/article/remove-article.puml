@@ -1,0 +1,42 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":ArticleController" as controller
+    participant ":ArticleCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":Editor" as editor
+    participant ":Article" as activeRecord
+end box
+
+tourist -> controller : remove(request)
+activate controller
+
+controller -> handler : remove(command)
+activate handler
+
+handler -> accRepo : getEditorById(accountId)
+activate accRepo
+handler <-- accRepo : Editor
+deactivate accRepo
+
+handler -> activeRecord : getRecordById(articleId)
+activate activeRecord
+handler <-- activeRecord : Article
+deactivate activeRecord
+
+handler -> editor : removeArticle(article)
+activate editor
+editor -> editor : hasOwned(article)
+handler <-- editor : true
+deactivate editor
+
+handler -> activeRecord : remove(articleId)
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

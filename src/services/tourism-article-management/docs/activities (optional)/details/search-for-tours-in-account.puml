@@ -1,0 +1,15 @@
+@startuml
+
+|Tour operator|
+start
+:(1) Select private filter options and submit;
+
+|System|
+:(2) Return tours matching the filter;
+
+|Tour operator|
+:(3) Review the result;
+
+stop
+
+@enduml

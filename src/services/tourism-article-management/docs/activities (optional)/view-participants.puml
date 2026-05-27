@@ -1,0 +1,15 @@
+@startuml
+
+|User|
+start
+:(1) Ask for tourists on a specific hosted tour;
+|System|
+:(2) Return the list of qualifying tours;
+|User|
+:(3) Select a tour;
+|System|
+:(4) Deliver the current list of registered tourists;
+
+stop
+
+@enduml

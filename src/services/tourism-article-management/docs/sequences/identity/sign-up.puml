@@ -1,0 +1,34 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":AccountController" as controller
+    participant ":AccountCommandHandler" as handler
+    participant ":EncryptionService" as encrypt
+    participant ":TokenService" as token
+    participant ":Account" as activeRecord
+end box
+
+tourist -> controller : signup(request)
+activate controller
+
+controller -> handler : signup(command)
+activate handler
+
+handler -> activeRecord : !getByPhoneNumber(phoneNumber)
+handler -> activeRecord : !getByEmail(email)
+
+handler -> encrypt : hash(password)
+handler -> activeRecord : create(request)
+
+handler -> activeRecord : save()
+handler -> token : generate(accountId)
+
+deactivate handler
+
+controller --> tourist : HTTP 201 + JSON (Token)
+deactivate controller
+
+@enduml

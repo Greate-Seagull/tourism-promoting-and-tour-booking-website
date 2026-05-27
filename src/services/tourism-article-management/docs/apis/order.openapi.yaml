@@ -1,0 +1,219 @@
+openapi: 3.0.1
+info:
+  title: Order
+  description: Example workspace
+  version: 1.0.0
+tags: []
+paths:
+  /orders/{id}:
+    get:
+      summary: Get order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteOrder'
+          headers: {}
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /orders:
+    post:
+      summary: Book tour
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreation'
+        required: true
+      responses:
+        '201':
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteOrder'
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /orders/{id}/cancel:
+    post:
+      summary: Cancel order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /webhook/payment:
+    post:
+      summary: Payment webhook
+      # requestBody:
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+components:
+  schemas:
+    CompleteOrder:
+      type: object
+      required:
+        - id
+        - note
+        - paymentId
+        - tourId
+        - tourists
+        - takeOffDate
+      properties:
+        id:
+          type: string
+        takeOffDate:
+          type: string
+        tourId:
+          type: string
+        transactionId:
+          type: string
+        accountId:
+          type: string
+        contact:
+          $ref: '#/components/schemas/Contact'
+        tourists:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tourist'
+        note:
+          type: string
+      description: A complete model for order
+    OrderCreation:
+      type: object
+      required:
+        - note
+        - tourId
+        - touristInfo
+        - takeOffDate
+      properties:
+        takeOffDate:
+          type: string
+        tourId:
+          type: string
+        accountId:
+          type: string
+        contact:
+          $ref: '#/components/schemas/Contact'
+        touristInfo:
+          type: array
+          items:
+            type: object
+            required:
+              - tourists
+              - ageTier
+            properties:
+              ageTier:
+                type: string
+              tourists:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tourist'
+        note:
+          type: string
+      description: A creation model for order
+    Contact:
+      type: object
+      required:
+        - fullname
+        - phoneNumber
+        - email
+      properties:
+        fullname:
+          type: string
+        phoneNumber:
+          type: string
+        email:
+          type: string
+    Tourist:
+      type: object
+      required:
+        - fullname
+        - gender
+        - dateOfBirth
+        - wantSingleRoom
+      properties:
+        fullname:
+          type: string
+        gender:
+          enum:
+            - male
+            - female
+          type: string
+          default: male
+        dateOfBirth:
+          type: string
+        wantSingleRoom:
+          type: boolean
+  responses:
+    default:
+      description:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message

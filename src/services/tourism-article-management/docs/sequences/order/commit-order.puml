@@ -1,0 +1,46 @@
+@startuml
+
+autonumber
+
+actor "Bank" as user
+box "Application Server" #LightBlue
+    participant ":OrderController" as controller
+    participant ":OrderCommandHandler" as handler
+    participant ":OrderRepository" as ordRepo
+    participant ":EncryptionService" as encrypt
+    participant ":PaymentRepository" as payRepo
+    participant ":EventPublisher" as publisher
+end box
+
+user -> controller : notify(request)
+activate controller
+
+controller --> user : HTTP 204
+
+controller -> handler : commit(command)
+activate handler
+
+handler -> ordRepo : getSnapshotById(orderId)
+activate ordRepo
+handler <-- ordRepo : OrderSnapshot
+deactivate ordRepo
+
+handler -> handler : isPending(order)
+handler -> encrypt : hashSignature(orderId, amount, idempotencyKey) (using HMAC-SHA256)
+
+handler -> ordRepo : existTransaction(transactionId)
+
+handler -> payRepo : getTransactionById(transactionId)
+activate payRepo
+handler <-- payRepo : Transaction
+deactivate payRepo
+
+handler -> handler : validate(order, transaction) (isSucceeded, isAmountCorrect, isReceiverCorrect)
+
+handler -> ordRepo : commit(orderId, transactionId)
+handler -> publisher : publish(OrderCommited)
+
+deactivate handler
+deactivate controller
+
+@enduml

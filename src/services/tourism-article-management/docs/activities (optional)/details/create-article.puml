@@ -1,0 +1,18 @@
+@startuml
+
+|Editor|
+start
+repeat :(1) Provide title, introduction and cover image;
+
+|System|
+backward :(2a1) Inform about the mistake;
+repeat while ((2) Validate the information) is (fails)
+:(3) Save the created article;
+:(4) Return the created article;
+
+|Editor|
+:(5) Review the result;
+
+stop
+
+@enduml

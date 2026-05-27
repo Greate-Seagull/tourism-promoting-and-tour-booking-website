@@ -1,0 +1,41 @@
+@startuml
+
+autonumber
+
+actor "Tour operator" as tourist
+box "Application Server" #LightBlue
+    participant ":TourController" as controller
+    participant ":TourCommandHandler" as handler
+    participant ":Destination" as destination
+    participant ":AccountRepository" as accRepo
+    participant ":TourRepository" as tourRepo
+    participant ":TourOperator" as tourOp
+end box
+
+tourist -> controller : host(request)
+activate controller
+
+controller -> handler : host(command)
+activate handler
+
+handler -> destination : getById(pickUpId)
+handler -> destination : getById(dropOffId)
+handler -> accRepo : getTourOperatorById(accountId)
+activate accRepo
+handler <-- accRepo : TourOperator
+deactivate accRepo
+
+handler -> tourOp : host(request, pickUp, dropOff)
+activate tourOp
+tourOp -> tourOp : requireVisaPolicy(pickUp, dropOff, policy)
+handler <-- tourOp : TourItinerary, TourPresentation
+deactivate tourOp
+
+handler -> tourRepo : save(tourId, itinerary, presentation)
+
+deactivate handler
+
+controller --> tourist : HTTP 201 + JSON CompleteTour
+deactivate controller
+
+@enduml

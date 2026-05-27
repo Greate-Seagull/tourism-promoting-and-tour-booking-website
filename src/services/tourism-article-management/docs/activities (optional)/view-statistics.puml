@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+|User|
+start
+:(1) Ask to view statistics with specific periods;
+|System|
+:(2) Return the role-appropriate dashboard or report;
+|User|
+:(3) Request export;
+|System|
+:(4) 1 Generate PDF/CSV of the current view;
+stop
+
+@enduml

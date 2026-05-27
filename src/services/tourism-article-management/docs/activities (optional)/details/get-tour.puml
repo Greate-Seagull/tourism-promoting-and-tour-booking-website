@@ -1,0 +1,15 @@
+@startuml
+
+|Tourist|
+start
+:(1) Select a tour;
+
+|System|
+:(2) Return the chosen tour details;
+
+|Tourist|
+:(3) Review the result;
+
+stop
+
+@enduml

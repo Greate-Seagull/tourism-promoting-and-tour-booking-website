@@ -1,0 +1,29 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":ArticleController" as controller
+    participant ":ArticleQueryHandler" as queryHandler
+    participant ":ArticleProjection" as projection
+end box
+
+tourist -> controller : get(articleId)
+activate controller
+
+controller -> queryHandler : get(getArticleQuery)
+activate queryHandler
+
+queryHandler -> projection : getCompleteById(articleId)
+activate projection
+projection --> queryHandler : CompleteArticle
+deactivate projection
+
+queryHandler --> controller : CompleteArticle
+deactivate queryHandler
+
+controller --> tourist : HTTP 200 + JSON (CompleteArticle)
+deactivate controller
+
+@enduml

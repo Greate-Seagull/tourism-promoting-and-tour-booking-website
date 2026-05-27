@@ -1,0 +1,15 @@
+@startuml
+
+|User|
+start
+:(1) Ask to work with tours;
+|System|
+:(2) Return the list of tours the operator currently hosts;
+|User|
+repeat :(3) Perform the requested operation (host, publish, schedule, compose price, cancel,...);
+|System|
+backward :(4a1) Inform specific errors;
+repeat while ((4) Validate and serve the request) is (fails)
+stop
+
+@enduml

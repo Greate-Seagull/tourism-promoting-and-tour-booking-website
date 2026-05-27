@@ -1,0 +1,15 @@
+@startuml
+
+|Tourist|
+start
+:(1) Select an order;
+
+|System|
+:(2) Return the chosen order details;
+
+|Tourist|
+:(3) Review the result;
+
+stop
+
+@enduml

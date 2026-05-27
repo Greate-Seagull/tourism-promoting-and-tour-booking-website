@@ -1,0 +1,694 @@
+openapi: 3.0.1
+info:
+  title: Account
+  description: Example workspace
+  version: 1.0.0
+paths:
+  /accounts/me/orders:
+    get:
+      summary: Search for orders
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: takeOffDate
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: tourId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: price
+          in: query
+          required: false
+          example: 0
+          schema:
+            type: integer
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: refundable
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SummarizedOrder'
+                  metadata:
+                    $ref: '#/components/schemas/SearchResultMetadata'
+                required:
+                  - data
+                  - metadata
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /accounts/me/departures:
+    get:
+      summary: Search for departures in an account
+      parameters:
+        - name: takeOffDate
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: tourId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: stay
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Stay'
+        - name: status
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/DepartureStatus'
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - metadata
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SummarizedPrivateDeparture'
+                  metadata:
+                    $ref: '#/components/schemas/SearchResultMetadata'
+                    headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /accounts/me/tours:
+    get:
+      summary: Search for tours in an account
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: title
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/TourStatus'
+        - name: registrations
+          in: query
+          required: true
+          example: 0
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                  - registrations
+                  - title
+                  - status
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  status:
+                    $ref: '#/components/schemas/TourStatus'
+                  registrations:
+                    type: integer
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /accounts/me/articles:
+    get:
+      summary: Get articles in account
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SummarizedPrivateArticle'
+                title: GetArticlesInAccountOk
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /accounts/me/statistics:
+    get:
+      summary: View statistics
+      parameters:
+        - name: view
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/View'
+        - name: period
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/PeriodQuery'
+        - name: granularity
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/StatisticGranularity'
+      responses:
+        '200':
+          description:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /signin:
+    post:
+      summary: Sign in
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - phoneNumberOrEmail
+                - password
+              properties:
+                password:
+                  type: string
+                phoneNumberOrEmail:
+                  type: string
+        required: true
+      responses:
+        '201':
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                properties:
+                  token:
+                    type: string
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /signup:
+    post:
+      summary: Sign up
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - fullname
+                - email
+                - phoneNumber
+                - password
+              properties:
+                email:
+                  type: string
+                fullname:
+                  type: string
+                password:
+                  type: string
+                phoneNumber:
+                  type: string
+        required: true
+      responses:
+        '201':
+          description:
+          content:
+            application/json:
+              schema:
+                type: object
+                title: SignUpCreated
+                required:
+                  - token
+                properties:
+                  token:
+                    type: string
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /role-requests:
+    post:
+      summary: Apply for role
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleRequestCreation'
+        required: true
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /accounts/me/bank-account:
+    get:
+      summary: Submit bank account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bankBin:
+                  type: string
+                accountNumber:
+                  type: string
+              required:
+                - bankBin
+                - accountNumber
+        required: true
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '400':
+          $ref: '#/components/responses/default'
+          description:
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+  /accounts/me/bank-account/verify:
+    get:
+      summary: Verify bank account
+      responses:
+        '204':
+          description: >-
+            The request was successful, but there is no content to return in the
+            response.
+          headers: {}
+        '401':
+          $ref: '#/components/responses/default'
+          description:
+        '403':
+          $ref: '#/components/responses/default'
+          description:
+        '404':
+          $ref: '#/components/responses/default'
+          description:
+        '500':
+          $ref: '#/components/responses/default'
+          description:
+components:
+  schemas:
+    SummarizedPrivateTour:
+      type: object
+      required:
+        - id
+        - registrations
+        - title
+        - status
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/TourStatus'
+        registrations:
+          type: integer
+      description: ''
+    SummarizedPrivateDeparture:
+      type: object
+      required:
+        - status
+        - tourId
+        - takeOffDate
+        - stay
+      properties:
+        takeOffDate:
+          type: string
+        tourId:
+          type: string
+        stay:
+          $ref: '#/components/schemas/Stay'
+        status:
+          $ref: '#/components/schemas/DepartureStatus'
+      description: ''
+    TourStatus:
+      enum:
+        - published
+        - unpublished
+      type: string
+    Stay:
+      type: object
+      required:
+        - dayCount
+        - nightCount
+      properties:
+        dayCount:
+          type: integer
+        nightCount:
+          type: integer
+      description: ''
+    DepartureStatus:
+      enum:
+        - enrolling
+        - ongoing
+        - completed
+      type: string
+      default: ongoing
+      description: ''
+    SummarizedOrder:
+      type: object
+      required:
+        - id
+        - tourId
+        - takeOffDate
+        - status
+        - refundable
+        - price
+      properties:
+        id:
+          type: string
+        takeOffDate:
+          type: string
+        tourId:
+          type: string
+        price:
+          type: integer
+        status:
+          type: string
+        refundable:
+          type: boolean
+      description: ''
+    SummarizedPrivateArticle:
+      type: object
+      required:
+        - id
+        - title
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+      description: ''
+    RoleRequestCreation:
+      type: object
+      required:
+        - role
+        - profile
+      properties:
+        role:
+          $ref: '#/components/schemas/Role'
+        profile:
+          type: array
+          items:
+            $ref: '#/components/schemas/Paper'
+      description: ''
+    Role:
+      enum:
+        - editor
+        - tour-operator
+      type: string
+      description: ''
+    Paper:
+      type: object
+      properties:
+        identity:
+          type: string
+        organization:
+          type: string
+      required:
+        - identity
+        - organization
+      description: ''
+    Statistics:
+      type: object
+      required:
+        - meta
+        - series
+        - summary
+      properties:
+        meta:
+          type: object
+          required:
+            - view
+            - period
+            - granularity
+          properties:
+            view:
+              $ref: '#/components/schemas/View'
+            period:
+              type: string
+            granularity:
+              $ref: '#/components/schemas/StatisticGranularity'
+        series:
+          type: array
+          items:
+            type: object
+            required:
+              - date
+              - metrics
+            properties:
+              date:
+                type: string
+              metrics:
+                oneOf:
+                  - $ref: '#/components/schemas/EditorMetrics'
+                  - $ref: '#/components/schemas/TourOperatorMetrics'
+                  - $ref: '#/components/schemas/AdminMetrics'
+        summary:
+          oneOf:
+            - $ref: '#/components/schemas/EditorMetrics'
+            - $ref: '#/components/schemas/TourOperatorMetrics'
+            - $ref: '#/components/schemas/AdminMetrics'
+    View:
+      enum:
+        - editor
+        - tour-operator
+        - admin
+      type: string
+      description: ''
+    StatisticGranularity:
+      enum:
+        - day
+        - month
+        - week
+      type: string
+      default: day
+      description: ''
+    EditorMetrics:
+      type: object
+      required:
+        - reportsReceived
+        - totalViews
+        - averageReading
+      properties:
+        totalViews:
+          type: integer
+        averageReading:
+          type: number
+        reportsReceived:
+          type: integer
+      description: ''
+    TourOperatorMetrics:
+      type: object
+      required:
+        - revenue
+        - averageRating
+        - occupancy
+        - refunds
+      properties:
+        refunds:
+          type: integer
+        revenue:
+          type: integer
+        occupancy:
+          type: number
+        averageRating:
+          type: number
+      description: ''
+    AdminMetrics:
+      type: object
+      required:
+        - users
+        - publishedTours
+        - reports
+        - bannedAccounts
+      properties:
+        users:
+          type: integer
+        reports:
+          type: integer
+        bannedAccounts:
+          type: integer
+        publishedTours:
+          type: integer
+      description: ''
+    SearchResultMetadata:
+      type: object
+      required:
+        - filters
+        - pagination
+        - sort
+      properties:
+        filters:
+          type: array
+          items:
+            type: object
+            required:
+              - any
+              - name
+            properties:
+              name:
+                type: string
+              any:
+                type: object
+                properties: {}
+        sort:
+          type: array
+          items:
+            type: object
+            required:
+              - direction
+              - name
+            properties:
+              name:
+                type: string
+              direction:
+                type: string
+        pagination:
+          type: object
+          required:
+            - elements
+            - last
+            - page
+            - size
+          properties:
+            page:
+              type: integer
+            size:
+              type: integer
+            last:
+              type: integer
+            elements:
+              type: integer
+      description: ''
+    PeriodQuery:
+      enum:
+        - last-30-days
+        - last-60-days
+        - last-90-days
+      type: string
+      default: last-30-days
+  responses:
+    default:
+      description:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message

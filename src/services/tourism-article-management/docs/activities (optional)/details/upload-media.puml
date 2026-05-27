@@ -1,0 +1,16 @@
+@startuml
+
+|Editor|
+start
+:(1) Provide an media;
+
+|System|
+:(2) Save the media;
+:(3) Inform the editor;
+
+|Editor|
+:(4) Review the result;
+
+stop
+
+@enduml

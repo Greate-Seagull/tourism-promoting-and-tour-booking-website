@@ -1,0 +1,39 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":AdminController" as controller
+    participant ":AdminCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":EventPublisher" as eventPub
+    participant ":Admin" as act
+end box
+
+tourist -> controller : demote(request)
+activate controller
+
+controller -> handler : demote(command)
+activate handler
+
+handler -> accRepo : getAdminById(accountId)
+activate accRepo
+handler <-- accRepo : Admin
+deactivate accRepo
+
+handler -> act : demote(account, roles)
+activate act
+act -> act : apply(AccountDemoted)
+handler <-- act : true
+deactivate act
+
+handler -> accRepo : demote(accountId, roles)
+handler -> eventPub : publish(events)
+
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

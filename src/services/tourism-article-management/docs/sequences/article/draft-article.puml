@@ -1,0 +1,37 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":ArticleController" as controller
+    participant ":ArticleCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":Editor" as editor
+    participant ":Article" as activeRecord
+end box
+
+tourist -> controller : draft(request)
+activate controller
+
+controller -> handler : draft(command)
+activate handler
+
+handler -> accRepo : getEditorById(accountId)
+activate accRepo
+handler <-- accRepo : Editor
+deactivate accRepo
+
+handler -> editor : draftArticle(request)
+activate editor
+editor -> activeRecord ** : create(request)
+handler <-- editor : Article
+deactivate editor
+
+handler -> activeRecord : save()
+deactivate handler
+
+controller --> tourist : HTTP 201 + JSON (CompleteArticle)
+deactivate controller
+
+@enduml

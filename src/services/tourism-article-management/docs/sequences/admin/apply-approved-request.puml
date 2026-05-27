@@ -1,0 +1,23 @@
+@startuml
+
+autonumber
+
+participant ":MessageBus" as messageBus
+box "Application Server" #LightBlue
+    participant ":EventSubscriber" as subscriber
+    participant ":AdminEventHandler" as eventHandler
+    participant ":AdminCommandHandler" as commandHandler
+end box
+
+messageBus -> subscriber : onMessage(RequestApproved)
+activate subscriber
+
+subscriber -> eventHandler : promote(RequestApproved)
+activate eventHandler
+
+eventHandler -> commandHandler : promote(command)
+
+deactivate eventHandler
+deactivate subscriber
+
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+
+|Tourist|
+start
+:(1) Open tour rating section;
+
+|System|
+:(2) Return ratings of the tour;
+
+|Tourist|
+:(3) Review the result;
+
+stop
+
+@enduml

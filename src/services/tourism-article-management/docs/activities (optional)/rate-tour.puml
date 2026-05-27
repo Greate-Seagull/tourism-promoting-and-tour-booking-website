@@ -1,0 +1,21 @@
+@startuml
+
+|User|
+start
+:(1) Ask to see his participated tours;
+|System|
+:(2) Deliver the tours matching the request;
+|User|
+:(3) Choose a tour;
+|System|
+:(4) Deliver the details of the selected tour;
+|User|
+repeat :(5) Supply score and review text or edit the existing rating;
+|System|
+backward :(6a1) Return specific errors;
+repeat while ((6) Validate the tourist rating) is (fails)
+:(7) Save the rating;
+
+stop
+
+@enduml

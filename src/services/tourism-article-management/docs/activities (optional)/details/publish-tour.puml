@@ -1,0 +1,18 @@
+@startuml
+
+|Tour operator|
+start
+repeat :(1) Agree with tour publication;
+
+|System|
+backward :(2a1) Inform about the status;
+repeat while ((2) Validate the tour status) is (fails)
+:(3) Save the tour status;
+:(4) Inform about the successful change;
+
+|Tour operator|
+:(5) Review the result;
+
+stop
+
+@enduml

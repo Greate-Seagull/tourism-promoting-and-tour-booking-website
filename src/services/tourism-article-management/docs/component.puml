@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+node "Client" {
+    component "Browser" {
+        component "UI"
+        component "Business processing"
+        component "Server communication"
+        "UI" ..> "Business processing"
+        "Business processing" ..> "Server communication"
+    }
+}
+
+node "Server" {
+    component "Presentation" {
+        component "Controller"
+        component "Webhook"
+        component "IdempotencyFilter"
+        component "GlobalExceptionHandler"
+    }
+    component "Application" {
+        component "Handler"
+        component "Port"
+    }
+    component "Domain" {
+    }
+    component "Infrastructure" {
+        component "Persistence"
+        component "Idempotency"
+    }
+
+    "Server communication" ..> Controller
+    Presentation ..> Handler
+    IdempotencyFilter ..> Idempotency
+    Infrastructure ..> Port
+    Infrastructure ..> Domain
+    Handler ..> Port
+    Application ..> Domain
+}
+
+@enduml

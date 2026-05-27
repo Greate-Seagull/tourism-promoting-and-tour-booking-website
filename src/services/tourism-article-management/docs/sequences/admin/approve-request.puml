@@ -1,0 +1,40 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":AdminController" as controller
+    participant ":AdminCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":Admin" as act
+    participant ":RoleRequest" as activeRecord
+    participant ":EventPublisher" as eventPub
+end box
+
+tourist -> controller : approveRequest(request)
+activate controller
+
+controller -> handler : approveRequest(command)
+activate handler
+
+handler -> accRepo : getAdminById(accountId)
+activate accRepo
+handler <-- accRepo : Admin
+deactivate accRepo
+
+handler -> act : approveRequest(request)
+activate act
+act -> act : apply(RequestApproved)
+handler <-- act : true
+deactivate act
+
+handler -> activeRecord : approve(requestId, reason)
+handler -> eventPub : publish(events)
+
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml

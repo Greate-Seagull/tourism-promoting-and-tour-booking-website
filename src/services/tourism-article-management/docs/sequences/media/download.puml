@@ -1,0 +1,28 @@
+@startuml
+autonumber
+
+actor "User" as user
+box "Application Server" #LightBlue
+    participant ":MediaController" as controller
+    participant ":MediaQueryHandler" as handler
+    participant ":MediaStore" as projection
+end box
+
+user -> controller : download(request)
+activate controller
+
+controller -> handler : download(query)
+activate handler
+
+handler -> projection : download(query)
+activate projection
+projection --> handler : Path
+deactivate projection
+
+handler --> controller : Path
+deactivate handler
+
+controller --> user : HTTP 200 + Resource
+deactivate controller
+
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+
+autonumber
+
+actor "Tourist" as tourist
+box "Application Server" #LightBlue
+    participant ":AccountController" as controller
+    participant ":AccountCommandHandler" as handler
+    participant ":AccountRepository" as accRepo
+    participant ":TourOperator" as tourOp
+end box
+
+tourist -> controller : verifyBankAccount(request)
+activate controller
+
+controller -> handler : verifyBankAccount(command)
+activate handler
+
+handler -> accRepo : verifyWallet(accountId)
+
+deactivate handler
+
+controller --> tourist : HTTP 204
+deactivate controller
+
+@enduml
